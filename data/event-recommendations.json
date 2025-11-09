@@ -1,0 +1,96 @@
+
+[
+  {
+    "category": "The Week Before: Carb-Loading",
+    "recommendations": [
+      {
+        "title": "Increase Carbohydrate Intake",
+        "advice": "In the 3-4 days leading up to your event, aim for 70-80% of your total calories to come from carbohydrates. This helps to maximize your muscle glycogen stores, which is your primary fuel source. Focus on easily digestible carbs like pasta, rice, and potatoes."
+      },
+      {
+        "title": "Taper Your Training",
+        "advice": "Reduce your training volume significantly this week. The goal is to rest and allow your muscles to store as much glycogen as possible, not to build more fitness. Rest is a critical part of your preparation."
+      },
+      {
+        "title": "Hydrate Consistently",
+        "advice": "Don't wait until the day before to hydrate. Sip water and electrolyte drinks consistently throughout the week. For every gram of glycogen stored, your body also stores about 3 grams of water."
+      },
+      {
+        "title": "Avoid High-Fiber Foods",
+        "advice": "In the last 1-2 days before the race, reduce your intake of high-fiber foods (like excessive raw vegetables, beans, and lentils) to minimize the risk of gastrointestinal distress during the event."
+      }
+    ]
+  },
+  {
+    "category": "The Night Before",
+    "recommendations": [
+      {
+        "title": "Carbohydrate-Rich Dinner",
+        "advice": "Eat a familiar, carbohydrate-rich dinner, but don't over-stuff yourself. A meal like pasta with tomato sauce or chicken with a large side of rice is ideal. Avoid overly fatty, spicy, or novel foods."
+      },
+      {
+        "title": "Final Hydration Top-Up",
+        "advice": "Sip on water or an electrolyte drink throughout the evening. Avoid alcohol, as it can lead to dehydration and disrupt your sleep."
+      },
+      {
+        "title": "Prepare Your Gear",
+        "advice": "Lay out your race clothes, shoes, bib, and nutrition (gels, chews) to avoid any last-minute stress in the morning. A calm mind is as important as a fueled body."
+      }
+    ]
+  },
+  {
+    "category": "Race Morning (3-4 Hours Before)",
+    "recommendations": [
+      {
+        "title": "Carbohydrate-Focused Breakfast",
+        "advice": "Eat a breakfast high in carbohydrates and low in fat and fiber. A bagel with peanut butter, a bowl of oatmeal with a banana, or a couple of energy bars are great options. Aim for 100-150 grams of carbs."
+      },
+      {
+        "title": "Hydrate, But Don't Overdo It",
+        "advice": "Drink about 500ml (16 oz) of water or an electrolyte drink when you wake up and then sip as needed. Stop drinking about 45-60 minutes before the start to allow time for a final bathroom stop."
+      },
+      {
+        "title": "Limit Caffeine (If Not Accustomed)",
+        "advice": "If you are a regular coffee drinker, have your usual amount. If not, race day is not the time to experiment with caffeine, as it can cause stomach issues for some."
+      }
+    ]
+  },
+  {
+    "category": "During the Race",
+    "recommendations": [
+      {
+        "title": "Start Fueling Early",
+        "advice": "Don't wait until you feel tired. Start taking in fuel (gels, chews) about 45-60 minutes into the race and continue every 45 minutes thereafter. Aim for 30-60 grams of carbohydrates per hour."
+      },
+      {
+        "title": "Hydrate at Every Aid Station",
+        "advice": "Take a few sips of water or the provided sports drink at every aid station, even early on. This helps maintain hydration levels and prevents you from falling behind."
+      },
+      {
+        "title": "Listen to Your Body",
+        "advice": "Every runner is different. If you feel a side stitch or stomach discomfort, slow down your intake. Stick to the nutrition plan you practiced in training."
+      }
+    ]
+  },
+  {
+    "category": "Post-Race Recovery",
+    "recommendations": [
+      {
+        "title": "The 30-Minute Window",
+        "advice": "The first 30-60 minutes after finishing are crucial for recovery. Consume a snack or drink with a 3:1 or 4:1 ratio of carbohydrates to protein. Chocolate milk is a classic, effective choice."
+      },
+      {
+        "title": "Rehydrate Thoroughly",
+        "advice": "Continue to sip on water and electrolyte drinks for several hours after the race to restore fluid balance. Weighing yourself before and after the race can give you an idea of how much fluid you lost."
+      },
+      {
+        "title": "Eat a Substantial Meal",
+        "advice": "Within 2-3 hours of finishing, have a well-balanced meal containing complex carbohydrates, high-quality protein, and healthy fats to continue the muscle repair and glycogen replenishment process."
+      },
+      {
+        "title": "Incorporate Anti-Inflammatory Foods",
+        "advice": "Foods rich in omega-3s (like salmon) and antioxidants (like berries and leafy greens) can help reduce muscle inflammation and soreness in the days following the race."
+      }
+    ]
+  }
+]

@@ -65,21 +65,17 @@ export interface ChatMessage {
     parts: { text: string }[];
 }
 
-export interface GroundingChunk {
-    maps?: {
-        uri: string;
-        title: string;
-    };
-    web?: {
-        uri: string;
-        title: string;
-    }
+export interface EventRecommendationItem {
+  title: string;
+  advice: string;
 }
 
-export interface EventRecommendationResponse {
-    text: string;
-    groundingChunks: GroundingChunk[];
+export interface EventRecommendationCategory {
+  category: string;
+  recommendations: EventRecommendationItem[];
 }
+
+export type EventRecommendations = EventRecommendationCategory[];
 
 export interface DeliveryPartner {
   name: string;

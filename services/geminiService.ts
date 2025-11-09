@@ -1,7 +1,7 @@
 
 
 import { GoogleGenAI, Type, Chat, Modality, GenerateContentResponse } from "@google/genai";
-import { UserProfile, NutritionPlan, ChatMessage, EventRecommendationResponse, DeliveryPartner, MealDeliveryOption } from "../types";
+import { UserProfile, NutritionPlan, ChatMessage, EventRecommendations, DeliveryPartner, MealDeliveryOption } from "../types";
 
 const API_KEY = process.env.API_KEY;
 
@@ -147,46 +147,19 @@ export const getDeliveryOptionsForMeal = async (mealName: string, area: string):
     return options;
 };
 
+let cachedEventRecommendations: EventRecommendations | null = null;
 
-export const getEventRecommendations = async (profile: UserProfile, eventName: string, eventDate: string, location: {latitude: number, longitude: number} | null): Promise<EventRecommendationResponse> => {
-    const prompt = `
-As 'NutriAthlete AI', provide pre-event and recovery nutrition recommendations for the following athlete and event.
-
-**Athlete Profile:**
-- Sport: ${profile.sport}
-- Weight: ${profile.weight} kg
-- Dietary Needs: ${profile.dietaryRestrictions.diet}, Allergies: ${profile.dietaryRestrictions.allergies.join(', ') || 'none'}
-- Current Location: ${location ? `${location.latitude}, ${location.longitude}`: 'Not provided'}
-
-**Event Details:**
-- Name: ${eventName}
-- Date: ${eventDate}
-
-Provide concise, actionable advice for the day before, the morning of, and immediately after the event. Focus on hydration, carbohydrate loading, and protein intake for muscle repair. If the user's location is available, use your knowledge to suggest specific types of nearby places (like 'healthy restaurants' or 'juice bars') that would be good for a pre- or post-event meal. Format the response as clean Markdown.
-`;
-
-    const apiCall = () => ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-            tools: [{googleMaps: {}}],
-            ...(location && { toolConfig: {
-              retrievalConfig: {
-                latLng: {
-                  latitude: location.latitude,
-                  longitude: location.longitude
-                }
-              }
-            }})
-        }
-    });
-
-    const response: GenerateContentResponse = await withRetry(apiCall);
-    
-    return {
-        text: response.text,
-        groundingChunks: response.candidates?.[0]?.groundingMetadata?.groundingChunks || []
-    };
+export const getEventRecommendations = async (): Promise<EventRecommendations> => {
+    if (cachedEventRecommendations) {
+        return cachedEventRecommendations;
+    }
+    const response = await fetch('/data/event-recommendations.json');
+    if (!response.ok) {
+        throw new Error('Failed to fetch event recommendations.');
+    }
+    const data = await response.json();
+    cachedEventRecommendations = data;
+    return data;
 };
 
 export const generateSpeech = async (text: string, audioContext: AudioContext): Promise<AudioBuffer> => {
