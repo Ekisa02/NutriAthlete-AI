@@ -5,7 +5,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { generateNutritionPlan, generateSpeech, getDeliveryOptionsForMeal } from '../services/geminiService';
 import { NutritionPlan as NutritionPlanType, Meal, MealDeliveryOption } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon } from './Icons';
+import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon, FileTextIcon } from './Icons';
 import LoadingIndicator from './LoadingIndicator';
 
 declare const jspdf: any;
@@ -302,7 +302,10 @@ const NutritionPlan: React.FC = () => {
                                     >
                                         <ShoppingBagIcon className="w-4 h-4" />
                                     </button>
-                                    <button onClick={() => handleMealClick(meal)} className="text-xs text-brand-primary font-semibold hover:underline">
+                                    <button onClick={() => handleMealClick(meal)} className="flex items-center gap-1.5 text-xs text-brand-primary font-semibold hover:underline">
+                                        <div className="p-1.5 rounded-full bg-base-100">
+                                            <FileTextIcon className="w-4 h-4" />
+                                        </div>
                                         {t('readMore')} &rarr;
                                     </button>
                                   </div>
