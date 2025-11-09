@@ -82,6 +82,7 @@ export const translations = {
     otherAllergy: 'Other (please specify)',
     allergyWarningTitle: 'Allergy Alert',
     allergyWarningText: 'Your plan does not account for your specified allergies ({allergies}). Please review all meal ingredients carefully.',
+    // Delivery
     orderDelivery: 'Order Delivery',
     compareAndOrder: 'Compare & Order',
     deliveryOptionsFor: 'Delivery Options for',
@@ -97,6 +98,12 @@ export const translations = {
     forStr: 'for',
     orderPlaced: 'Order Placed!',
     orderPlacedMessage: 'Your meal is on its way. Enjoy!',
+    enableCompareMode: 'Compare',
+    exitCompareMode: 'Exit Compare',
+    compareSelected: 'Compare Selected',
+    comparisonTitle: 'Comparison',
+    bestValue: 'Best Value',
+    backToList: 'Back to List',
     // Premium Upgrade
     upgradeNow: 'Upgrade Now',
     premiumBenefits: 'Unlock all features and get personalized recommendations with Premium!',
@@ -184,6 +191,7 @@ export const translations = {
     otherAllergy: 'Nyingine (tafadhali bainisha)',
     allergyWarningTitle: 'Tahadhari ya Mzio',
     allergyWarningText: 'Mpango wako hauzingatii mizio uliyoainisha ({allergies}). Tafadhali kagua viungo vyote vya mlo kwa makini.',
+    // Delivery
     orderDelivery: 'Agiza Uletewe',
     compareAndOrder: 'Linganisha na Agiza',
     deliveryOptionsFor: 'Chaguo za Uwasilishaji kwa',
@@ -199,6 +207,12 @@ export const translations = {
     forStr: 'kwa',
     orderPlaced: 'Agizo Limewekwa!',
     orderPlacedMessage: 'Mlo wako unakuja. Furahia!',
+    enableCompareMode: 'Linganisha',
+    exitCompareMode: 'Acha Kulinganisha',
+    compareSelected: 'Linganisha Zilizochaguliwa',
+    comparisonTitle: 'Ulinganisho',
+    bestValue: 'Thamani Bora',
+    backToList: 'Rudi Kwenye Orodha',
     // Premium Upgrade
     upgradeNow: 'Boresha Sasa',
     premiumBenefits: 'Fungua vipengele vyote na upate mapendekezo ya kibinafsi ukiwa na Premium!',

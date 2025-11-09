@@ -5,7 +5,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { generateNutritionPlan, generateSpeech, getDeliveryOptionsForMeal, initiateMpesaPayment } from '../services/geminiService';
 import { NutritionPlan as NutritionPlanType, Meal, MealDeliveryOption } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon, FileTextIcon, PhoneIcon } from './Icons';
+import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon, FileTextIcon, PhoneIcon, ScaleIcon, CheckIcon } from './Icons';
 import LoadingIndicator from './LoadingIndicator';
 
 declare const jspdf: any;
@@ -14,11 +14,13 @@ declare const html2canvas: any;
 interface DeliveryModalState {
     isOpen: boolean;
     meal: Meal | null;
-    step: 'loading' | 'list' | 'confirm' | 'payment' | 'processingPayment' | 'success';
+    step: 'loading' | 'list' | 'compare' | 'confirm' | 'payment' | 'processingPayment' | 'success';
     options: MealDeliveryOption[];
     selectedOption: MealDeliveryOption | null;
     phoneNumber: string;
     paymentError: string | null;
+    isCompareMode: boolean;
+    comparisonItems: MealDeliveryOption[];
 }
 
 const AllergyWarning: React.FC = () => {
@@ -73,6 +75,8 @@ const NutritionPlan: React.FC = () => {
       selectedOption: null,
       phoneNumber: '',
       paymentError: null,
+      isCompareMode: false,
+      comparisonItems: [],
   });
 
   // TTS State
@@ -183,7 +187,7 @@ const NutritionPlan: React.FC = () => {
   const handleOrderDeliveryClick = async (e: React.MouseEvent, meal: Meal) => {
     e.stopPropagation();
     if (!userProfile) return;
-    setDeliveryModalState({ isOpen: true, meal, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null });
+    setDeliveryModalState({ isOpen: true, meal, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null, isCompareMode: false, comparisonItems: [] });
     
     try {
       const options = await getDeliveryOptionsForMeal(meal.name, userProfile.geographicalArea);
@@ -195,7 +199,7 @@ const NutritionPlan: React.FC = () => {
   };
   
   const closeDeliveryModal = () => {
-      setDeliveryModalState({ isOpen: false, meal: null, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null });
+      setDeliveryModalState({ isOpen: false, meal: null, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null, isCompareMode: false, comparisonItems: [] });
   };
 
   const handleSelectOption = (option: MealDeliveryOption) => {
@@ -248,6 +252,35 @@ const NutritionPlan: React.FC = () => {
         </div>
     );
   };
+
+  const handleToggleComparisonItem = (option: MealDeliveryOption) => {
+        setDeliveryModalState(prev => {
+            const isSelected = prev.comparisonItems.some(item => item.mealName === option.mealName && item.partnerName === option.partnerName);
+            if (isSelected) {
+                return {
+                    ...prev,
+                    comparisonItems: prev.comparisonItems.filter(item => !(item.mealName === option.mealName && item.partnerName === option.partnerName))
+                };
+            } else {
+                return {
+                    ...prev,
+                    comparisonItems: [...prev.comparisonItems, option]
+                };
+            }
+        });
+    };
+
+    let comparisonMetrics = {
+        bestPrice: Infinity,
+        fastestTime: Infinity,
+        highestRating: -Infinity,
+    };
+
+    if (deliveryModalState.step === 'compare' && deliveryModalState.comparisonItems.length > 0) {
+        comparisonMetrics.bestPrice = Math.min(...deliveryModalState.comparisonItems.map(i => i.price));
+        comparisonMetrics.fastestTime = Math.min(...deliveryModalState.comparisonItems.map(i => parseInt(i.deliveryTime.split('-')[0])));
+        comparisonMetrics.highestRating = Math.max(...deliveryModalState.comparisonItems.map(i => i.rating));
+    }
   
   const currentDayPlan = plan?.[activeDay];
 
@@ -386,14 +419,15 @@ const NutritionPlan: React.FC = () => {
       )}
       {deliveryModalState.isOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={closeDeliveryModal}>
-            <div className="bg-base-200 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="bg-base-200 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="p-4 border-b border-base-300 flex justify-between items-center flex-shrink-0">
                     <div className="flex items-center">
-                       {(deliveryModalState.step === 'confirm' || deliveryModalState.step === 'payment') && (
+                       {(deliveryModalState.step === 'confirm' || deliveryModalState.step === 'payment' || deliveryModalState.step === 'compare') && (
                            <button onClick={() => setDeliveryModalState(prev => ({...prev, step: 'list', paymentError: null}))} className="mr-2 text-content-200 hover:text-white"><ChevronLeftIcon className="w-6 h-6"/></button>
                        )}
                        <h3 className="text-lg font-bold text-brand-primary">
                           {deliveryModalState.step === 'list' && `${t('compareAndOrder')}`}
+                          {deliveryModalState.step === 'compare' && `${t('comparisonTitle')}`}
                           {deliveryModalState.step === 'confirm' && `${t('confirmOrderTitle')}`}
                           {deliveryModalState.step === 'payment' && `${t('initiatePayment')}`}
                           {deliveryModalState.step === 'processingPayment' && `${t('processingPayment')}`}
@@ -404,7 +438,7 @@ const NutritionPlan: React.FC = () => {
                         <CloseIcon className="w-6 h-6"/>
                     </button>
                 </div>
-                <div className="p-1 flex-grow overflow-y-auto">
+                <div className="flex-grow overflow-y-auto">
                     {deliveryModalState.step === 'loading' && (
                         <div className="flex flex-col items-center justify-center h-full">
                             <div className="w-12 h-12 border-4 border-dashed rounded-full animate-spin border-brand-primary"></div>
@@ -412,29 +446,84 @@ const NutritionPlan: React.FC = () => {
                         </div>
                     )}
                     {deliveryModalState.step === 'list' && (
-                        <div className="p-4">
-                           <p className="text-sm text-content-200 mb-4">{t('deliveryOptionsFor')} <strong>{deliveryModalState.meal?.name}</strong>:</p>
+                        <>
+                           <div className="flex justify-between items-center p-4">
+                               <p className="text-sm text-content-200">{t('deliveryOptionsFor')} <strong>{deliveryModalState.meal?.name}</strong>:</p>
+                               <button onClick={() => setDeliveryModalState(prev => ({...prev, isCompareMode: !prev.isCompareMode, comparisonItems: []}))} className="flex items-center text-sm text-brand-primary font-semibold py-1 px-2 rounded-md hover:bg-brand-primary/10 transition-colors">
+                                   <ScaleIcon className="w-4 h-4 mr-2"/>
+                                   {deliveryModalState.isCompareMode ? t('exitCompareMode') : t('enableCompareMode')}
+                               </button>
+                           </div>
                            {deliveryModalState.options.length > 0 ? (
-                               <div className="space-y-3">
-                                   {deliveryModalState.options.map(option => (
-                                       <div key={option.partnerName + option.mealName} className="bg-base-100 p-3 rounded-lg">
-                                           <div className="flex justify-between items-center mb-2">
-                                               <h4 className="font-bold text-content-100">{option.mealName}</h4>
-                                               <span className="text-sm font-semibold text-brand-primary">{option.currency} {option.price.toFixed(2)}</span>
+                               <div className="space-y-3 p-4 pt-0">
+                                   {deliveryModalState.options.map(option => {
+                                       const isSelectedForCompare = deliveryModalState.comparisonItems.some(item => item.mealName === option.mealName && item.partnerName === option.partnerName);
+                                       return (
+                                       <div key={option.partnerName + option.mealName} className="bg-base-100 p-3 rounded-lg flex items-center gap-4">
+                                            {deliveryModalState.isCompareMode && (
+                                                <div 
+                                                    onClick={() => handleToggleComparisonItem(option)}
+                                                    className={`w-6 h-6 border-2 flex-shrink-0 ${isSelectedForCompare ? 'bg-brand-primary border-brand-primary' : 'border-base-300'} rounded-md flex items-center justify-center cursor-pointer transition-colors`}
+                                                >
+                                                    {isSelectedForCompare && <CheckIcon className="w-4 h-4 text-white" />}
+                                                </div>
+                                            )}
+                                           <div className="flex-grow">
+                                               <div className="flex justify-between items-center mb-2">
+                                                   <h4 className="font-bold text-content-100">{option.mealName}</h4>
+                                                   <span className="text-sm font-semibold text-brand-primary">{option.currency} {option.price.toFixed(2)}</span>
+                                               </div>
+                                                <p className="text-xs text-content-200 mb-3">via {option.partnerName}</p>
+                                               <div className="flex items-center justify-between text-xs text-content-200 border-t border-base-300 pt-2">
+                                                   <div className="flex items-center gap-1"><ClockIcon className="w-4 h-4"/><span>{option.deliveryTime}</span></div>
+                                                   <div className="flex items-center gap-1">{renderStarRating(option.rating)}<span>({option.rating})</span></div>
+                                                   {!deliveryModalState.isCompareMode &&
+                                                      <button onClick={() => handleSelectOption(option)} className="bg-brand-primary text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-brand-secondary transition-colors">{t('orderNow')}</button>
+                                                   }
+                                               </div>
+                                               {option.specialOffer && <p className="text-xs text-green-400 mt-2 font-semibold">{option.specialOffer}</p>}
                                            </div>
-                                            <p className="text-xs text-content-200 mb-3">via {option.partnerName}</p>
-                                           <div className="flex items-center justify-between text-xs text-content-200 border-t border-base-300 pt-2">
-                                               <div className="flex items-center gap-1"><ClockIcon className="w-4 h-4"/><span>{option.deliveryTime}</span></div>
-                                               <div className="flex items-center gap-1">{renderStarRating(option.rating)}<span>({option.rating})</span></div>
-                                               <button onClick={() => handleSelectOption(option)} className="bg-brand-primary text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-brand-secondary transition-colors">{t('orderNow')}</button>
-                                           </div>
-                                           {option.specialOffer && <p className="text-xs text-green-400 mt-2 font-semibold">{option.specialOffer}</p>}
                                        </div>
-                                   ))}
+                                   )})}
                                </div>
                            ) : (
                                <p className="text-center text-content-200 py-12">{t('noDeliveryOptions')}</p>
                            )}
+                           {deliveryModalState.isCompareMode && (
+                                <div className="p-4 sticky bottom-0 bg-base-200 border-t border-base-300">
+                                    <button
+                                        onClick={() => setDeliveryModalState(prev => ({...prev, step: 'compare'}))}
+                                        disabled={deliveryModalState.comparisonItems.length < 2}
+                                        className="w-full bg-brand-primary text-white py-3 rounded-lg font-bold transition-colors disabled:bg-base-300 disabled:text-content-200 disabled:cursor-not-allowed"
+                                    >
+                                        {t('compareSelected')} ({deliveryModalState.comparisonItems.length})
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
+                    {deliveryModalState.step === 'compare' && (
+                        <div className="p-4 overflow-x-auto">
+                            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${deliveryModalState.comparisonItems.length}, minmax(180px, 1fr))`}}>
+                                {deliveryModalState.comparisonItems.map(item => {
+                                    const isBestPrice = item.price === comparisonMetrics.bestPrice;
+                                    const isFastest = parseInt(item.deliveryTime.split('-')[0]) === comparisonMetrics.fastestTime;
+                                    const isHighestRating = item.rating === comparisonMetrics.highestRating;
+
+                                    return (
+                                        <div key={item.partnerName + item.mealName} className="bg-base-100 p-3 rounded-lg flex flex-col text-sm">
+                                            <h4 className="font-bold text-content-100 text-base">{item.mealName}</h4>
+                                            <p className="text-xs text-content-200 mb-4">via {item.partnerName}</p>
+                                            <div className="space-y-2 flex-grow mb-4">
+                                               <div className={`p-2 rounded-md ${isBestPrice ? 'bg-green-900/50' : 'bg-base-300/30'}`}><span className="font-semibold">{t('price')}:</span> <span className={isBestPrice ? 'text-green-400 font-bold' : ''}>{item.currency} {item.price.toFixed(2)}</span> {isBestPrice && <span className="text-xs text-green-400 ml-1">({t('bestValue')})</span>}</div>
+                                               <div className={`p-2 rounded-md ${isFastest ? 'bg-green-900/50' : 'bg-base-300/30'}`}><span className="font-semibold">{t('deliveryTime')}:</span> <span className={isFastest ? 'text-green-400 font-bold' : ''}>{item.deliveryTime}</span></div>
+                                               <div className={`p-2 rounded-md ${isHighestRating ? 'bg-green-900/50' : 'bg-base-300/30'}`}><span className="font-semibold">{t('rating')}:</span> <span className={isHighestRating ? 'text-green-400 font-bold' : ''}>{item.rating} / 5.0</span></div>
+                                            </div>
+                                            <button onClick={() => handleSelectOption(item)} className="mt-auto bg-brand-primary text-white text-sm font-bold py-2 px-3 rounded-md hover:bg-brand-secondary transition-colors w-full">{t('orderNow')}</button>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     )}
                     {deliveryModalState.step === 'confirm' && deliveryModalState.selectedOption && (
