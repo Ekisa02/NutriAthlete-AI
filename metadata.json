@@ -1,0 +1,7 @@
+{
+  "name": "NutriAthlete AI",
+  "description": "An AI-powered nutrition assistant for athletes. It provides personalized meal plans, supplement verification, and event-based dietary recommendations to optimize performance and recovery. Features include an AI chatbot, downloadable reports, and multilingual support.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
