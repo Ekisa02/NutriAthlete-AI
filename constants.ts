@@ -1,12 +1,17 @@
+
 import { SportType } from './types';
 
 export const SPORT_OPTIONS = Object.values(SportType);
 
 export const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
 
+export const DIET_OPTIONS = ['None', 'Vegetarian', 'Vegan', 'Gluten-Free'];
+
+export const ALLERGY_OPTIONS = ['Peanuts', 'Tree Nuts', 'Milk', 'Eggs', 'Soy', 'Wheat', 'Fish', 'Shellfish'];
+
 export const translations = {
   en: {
-    appName: 'NutriAthlete AI',
+    appName: 'OptiFuel',
     welcome: 'Welcome',
     dashboard: 'Dashboard',
     nutritionPlan: 'Nutrition Plan',
@@ -70,9 +75,15 @@ export const translations = {
     relevantLocations: 'Relevant Locations',
     locationPermission: 'Please enable location access to get localized recommendations.',
     gettingLocation: 'Getting your location...',
+    dietaryRestrictions: 'Dietary Restrictions',
+    dietType: 'Diet Type',
+    selectAllergies: 'Select any allergies',
+    otherAllergy: 'Other (please specify)',
+    allergyWarningTitle: 'Allergy Alert',
+    allergyWarningText: 'Your plan does not account for your specified allergies ({allergies}). Please review all meal ingredients carefully.',
   },
   sw: {
-    appName: 'NutriAthlete AI',
+    appName: 'OptiFuel',
     welcome: 'Karibu',
     dashboard: 'Dashibodi',
     nutritionPlan: 'Mpango wa Lishe',
@@ -136,5 +147,11 @@ export const translations = {
     relevantLocations: 'Maeneo Husika',
     locationPermission: 'Tafadhali ruhusu ufikiaji wa eneo ili kupata mapendekezo ya karibu.',
     gettingLocation: 'Inapata eneo lako...',
+    dietaryRestrictions: 'Vizuizi vya Lishe',
+    dietType: 'Aina ya Lishe',
+    selectAllergies: 'Chagua mizio yoyote',
+    otherAllergy: 'Nyingine (tafadhali bainisha)',
+    allergyWarningTitle: 'Tahadhari ya Mzio',
+    allergyWarningText: 'Mpango wako hauzingatii mizio uliyoainisha ({allergies}). Tafadhali kagua viungo vyote vya mlo kwa makini.',
   }
 };

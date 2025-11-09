@@ -1,12 +1,42 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-import { generateNutritionPlan, getMealDetails, generateSpeech } from '../services/geminiService';
+import { generateNutritionPlan, generateSpeech } from '../services/geminiService';
 import { NutritionPlan as NutritionPlanType, Meal } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { DownloadIcon, VolumeUpIcon, CloseIcon } from './Icons';
+import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon } from './Icons';
+import LoadingIndicator from './LoadingIndicator';
 
 declare const jspdf: any;
 declare const html2canvas: any;
+
+const AllergyWarning: React.FC = () => {
+    const { userProfile } = useAppContext();
+    const { t } = useLocalization();
+    const [isVisible, setIsVisible] = useState(true);
+
+    const allergies = [
+        ...(userProfile?.dietaryRestrictions.allergies || []),
+        userProfile?.dietaryRestrictions.otherAllergy
+    ].filter(Boolean);
+
+    if (allergies.length === 0 || !isVisible) {
+        return null;
+    }
+    
+    const allergyList = allergies.join(', ');
+    const warningText = t('allergyWarningText').replace('{allergies}', allergyList);
+
+    return (
+        <div className="bg-yellow-900/50 border border-yellow-700 text-yellow-300 px-4 py-3 rounded-lg relative mb-6" role="alert">
+            <strong className="font-bold">{t('allergyWarningTitle')}! </strong>
+            <span className="block sm:inline">{warningText}</span>
+            <button onClick={() => setIsVisible(false)} className="absolute top-0 bottom-0 right-0 px-4 py-3">
+               <CloseIcon className="w-5 h-5"/>
+            </button>
+        </div>
+    );
+};
 
 const NutritionPlan: React.FC = () => {
   const { userProfile } = useAppContext();
@@ -26,6 +56,15 @@ const NutritionPlan: React.FC = () => {
   // TTS State
   const [isSpeaking, setIsSpeaking] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
+  
+  const mealIcons: { [key: string]: React.ReactElement } = {
+    [t('breakfast')]: <SunIcon className="w-8 h-8 text-yellow-400" />,
+    [t('midMorningSnack')]: <CoffeeIcon className="w-8 h-8 text-orange-400" />,
+    [t('lunch')]: <FlameIcon className="w-8 h-8 text-red-500" />,
+    [t('afternoonSnack')]: <CoffeeIcon className="w-8 h-8 text-orange-400" />,
+    [t('dinner')]: <MoonIcon className="w-8 h-8 text-indigo-400" />,
+  };
+
 
   useEffect(() => {
     audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({sampleRate: 24000});
@@ -44,8 +83,6 @@ const NutritionPlan: React.FC = () => {
       setPlan(result);
     } catch (err: any) {
       console.error(err);
-      // Since we are loading from a file, rate limit errors are not expected here.
-      // Kept a generic error message.
       setError(t('planError'));
     } finally {
       setLoading(false);
@@ -58,7 +95,7 @@ const NutritionPlan: React.FC = () => {
 
   const handleDownload = () => {
     if (reportRef.current) {
-      html2canvas(reportRef.current, { backgroundColor: '#1F2937' }).then((canvas: any) => {
+      html2canvas(reportRef.current, { backgroundColor: '#0D1117' }).then((canvas: any) => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jspdf.jsPDF({
           orientation: 'portrait',
@@ -71,23 +108,30 @@ const NutritionPlan: React.FC = () => {
     }
   };
 
-  const handleMealClick = async (meal: Meal) => {
+  const handleMealClick = (meal: Meal) => {
     setSelectedMeal(meal);
     setIsModalOpen(true);
-    setIsModalLoading(true);
-    setModalContent('');
-    try {
-        const details = await getMealDetails(meal.name, meal.description);
-        setModalContent(details);
-    } catch (e: any) {
-        if (e.toString().includes("RESOURCE_EXHAUSTED")) {
-            setModalContent(t('rateLimitError'));
-        } else {
-            setModalContent("Could not load meal details. Please try again.");
-        }
-    } finally {
-        setIsModalLoading(false);
+    setIsModalLoading(false); // No loading needed as data is local
+
+    let content = `<p class="mb-4 text-content-200">${meal.description}</p>`;
+
+    if (meal.ingredients && meal.ingredients.length > 0) {
+        content += `<h4 class="font-bold text-md text-content-100 mb-2">${t('ingredients')}</h4><ul class="list-disc list-inside space-y-1 text-content-200">` 
+            + meal.ingredients.map(i => `<li>${i}</li>`).join('') 
+            + '</ul>';
     }
+
+    if (meal.preparation && meal.preparation.length > 0) {
+        content += `<h4 class="font-bold text-md text-content-100 mt-4 mb-2">${t('preparation')}</h4><ol class="list-decimal list-inside space-y-1 text-content-200">` 
+            + meal.preparation.map(p => `<li>${p}</li>`).join('') 
+            + '</ol>';
+    }
+
+    if (!meal.ingredients && !meal.preparation) {
+        content = `<p>Details for this meal are not available.</p>`;
+    }
+    
+    setModalContent(content);
   };
 
   const handleListenToTip = async () => {
@@ -117,12 +161,7 @@ const NutritionPlan: React.FC = () => {
   const currentDayPlan = plan?.[activeDay];
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 bg-base-200 rounded-lg">
-        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-brand-primary"></div>
-        <p className="mt-4 text-lg text-content-100 font-semibold">{t('generatingPlan')}</p>
-      </div>
-    );
+    return <LoadingIndicator />;
   }
 
   if (error) {
@@ -144,6 +183,9 @@ const NutritionPlan: React.FC = () => {
             {t('downloadReport')}
           </button>
         </div>
+
+        <AllergyWarning />
+
         <div className="flex flex-wrap gap-2 mb-6 border-b border-base-300 pb-4">
             {plan.map((dayPlan, index) => (
                 <button
@@ -179,17 +221,22 @@ const NutritionPlan: React.FC = () => {
                   { title: t('dinner'), meal: currentDayPlan.meals?.dinner },
               ].map(({title, meal}) => (
                    meal ? (
-                      <div key={title} className="bg-base-200 p-4 rounded-lg group transition-all duration-300 hover:shadow-lg hover:bg-base-300 cursor-pointer" onClick={() => handleMealClick(meal)}>
-                          <h5 className="font-bold text-md text-content-100 mb-2">{title}: <span className="text-brand-primary">{meal.name ?? 'N/A'}</span></h5>
-                          <p className="text-sm text-content-200 mb-3">{meal.description ?? 'No description available.'}</p>
-                          <div className="flex justify-between items-center">
-                              <div className="flex space-x-4 text-xs">
-                                  <span>P: {meal.macros?.protein ?? 'N/A'}g</span>
-                                  <span>C: {meal.macros?.carbs ?? 'N/A'}g</span>
-                                  <span>F: {meal.macros?.fats ?? 'N/A'}g</span>
-                              </div>
-                              <div className="text-xs text-brand-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                {t('readMore')} &rarr;
+                      <div key={title} className="bg-base-200 p-4 rounded-lg group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-base-300 cursor-pointer flex items-start gap-4" onClick={() => handleMealClick(meal)}>
+                          <div className="flex-shrink-0 mt-1">
+                              {mealIcons[title]}
+                          </div>
+                          <div className="flex-grow">
+                              <h5 className="font-bold text-md text-content-100 mb-1">{title}: <span className="text-brand-primary">{meal.name ?? 'N/A'}</span></h5>
+                              <p className="text-sm text-content-200 mb-3">{meal.description ?? 'No description available.'}</p>
+                              <div className="flex justify-between items-center">
+                                  <div className="flex space-x-4 text-xs">
+                                      <span>P: {meal.macros?.protein ?? 'N/A'}g</span>
+                                      <span>C: {meal.macros?.carbs ?? 'N/A'}g</span>
+                                      <span>F: {meal.macros?.fats ?? 'N/A'}g</span>
+                                  </div>
+                                  <div className="text-xs text-brand-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {t('readMore')} &rarr;
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -228,7 +275,7 @@ const NutritionPlan: React.FC = () => {
                             <p className="ml-3 text-content-200">{t('gettingDetails')}</p>
                         </div>
                       ) : (
-                        <div className="prose prose-invert max-w-none text-content-200" dangerouslySetInnerHTML={{ __html: modalContent.replace(/\n/g, '<br />') }} />
+                        <div className="max-w-none" dangerouslySetInnerHTML={{ __html: modalContent }} />
                       )}
                   </div>
               </div>

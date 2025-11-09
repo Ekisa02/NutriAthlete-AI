@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-import { UserProfile, SportType } from '../types';
+import { UserProfile } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { SPORT_OPTIONS, GENDER_OPTIONS } from '../constants';
+import { SPORT_OPTIONS, GENDER_OPTIONS, DIET_OPTIONS, ALLERGY_OPTIONS } from '../constants';
 
 const ProfileForm: React.FC = () => {
   const { setUserProfile } = useAppContext();
@@ -18,11 +18,26 @@ const ProfileForm: React.FC = () => {
     weight: undefined,
     sport: undefined,
     subscription: 'Basic', // Default to Basic
+    dietaryRestrictions: {
+        diet: 'None',
+        allergies: [],
+        otherAllergy: ''
+    }
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'diet' || name === 'otherAllergy') {
+        setFormData(prev => ({
+            ...prev,
+            dietaryRestrictions: {
+                ...prev.dietaryRestrictions!,
+                [name]: value
+            }
+        }));
+    } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
   
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,13 +45,25 @@ const ProfileForm: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value === '' ? undefined : Number(value) }));
   };
 
+  const handleAllergyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData(prev => {
+        const currentAllergies = prev.dietaryRestrictions?.allergies || [];
+        if (checked) {
+            return { ...prev, dietaryRestrictions: { ...prev.dietaryRestrictions!, allergies: [...currentAllergies, value] } };
+        } else {
+            return { ...prev, dietaryRestrictions: { ...prev.dietaryRestrictions!, allergies: currentAllergies.filter(a => a !== value) } };
+        }
+    });
+  };
+
+
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple validation
-    if (formData.name && formData.age && formData.gender && formData.height && formData.weight && formData.sport) {
+    if (formData.name && formData.age && formData.gender && formData.height && formData.weight && formData.sport && formData.dietaryRestrictions) {
         setUserProfile(formData as UserProfile);
     } else {
         alert("Please fill all fields before submitting.");
@@ -48,7 +75,7 @@ const ProfileForm: React.FC = () => {
       case 1:
         return (
           <>
-            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 1 {t('of')} 3 - Personal Info</h3>
+            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 1 {t('of')} 4 - Personal Info</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-content-200">{t('fullName')}</label>
@@ -71,7 +98,7 @@ const ProfileForm: React.FC = () => {
       case 2:
         return (
           <>
-            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 2 {t('of')} 3 - Biometrics</h3>
+            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 2 {t('of')} 4 - Biometrics</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="height" className="block text-sm font-medium text-content-200">{t('height')}</label>
@@ -87,7 +114,7 @@ const ProfileForm: React.FC = () => {
       case 3:
         return (
           <>
-            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 3 {t('of')} 3 - Sport Details</h3>
+            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 3 {t('of')} 4 - Sport Details</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="geographicalArea" className="block text-sm font-medium text-content-200">{t('geographicalArea')}</label>
@@ -103,6 +130,41 @@ const ProfileForm: React.FC = () => {
             </div>
           </>
         );
+        case 4:
+        return (
+          <>
+            <h3 className="text-lg font-medium text-center text-content-100 mb-4">{t('step')} 4 {t('of')} 4 - {t('dietaryRestrictions')}</h3>
+            <div className="space-y-6">
+                <div>
+                    <label htmlFor="diet" className="block text-sm font-medium text-content-200">{t('dietType')}</label>
+                    <select name="diet" id="diet" value={formData.dietaryRestrictions?.diet} onChange={handleChange} className="mt-1 block w-full bg-base-200 border border-base-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm" required>
+                      {DIET_OPTIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                </div>
+                 <div>
+                    <label className="block text-sm font-medium text-content-200">{t('selectAllergies')}</label>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                        {ALLERGY_OPTIONS.map(allergy => (
+                            <label key={allergy} className="flex items-center space-x-2">
+                                <input 
+                                    type="checkbox" 
+                                    value={allergy}
+                                    checked={formData.dietaryRestrictions?.allergies?.includes(allergy)}
+                                    onChange={handleAllergyChange}
+                                    className="h-4 w-4 rounded border-base-300 text-brand-primary focus:ring-brand-primary"
+                                />
+                                <span className="text-sm text-content-200">{allergy}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                  <label htmlFor="otherAllergy" className="block text-sm font-medium text-content-200">{t('otherAllergy')}</label>
+                  <input type="text" name="otherAllergy" id="otherAllergy" value={formData.dietaryRestrictions?.otherAllergy} onChange={handleChange} className="mt-1 block w-full bg-base-200 border border-base-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm" />
+                </div>
+            </div>
+          </>
+        );
       default:
         return null;
     }
@@ -115,10 +177,10 @@ const ProfileForm: React.FC = () => {
         <p className="text-center text-content-200 mb-6">{t('createProfile')}</p>
         <form onSubmit={handleSubmit}>
           {renderStep()}
-          <div className="mt-8 flex justify-between">
-            {step > 1 && <button type="button" onClick={prevStep} className="bg-base-300 text-content-100 py-2 px-4 rounded-md hover:bg-gray-500 transition-colors">{t('back')}</button>}
-            {step < 3 && <button type="button" onClick={nextStep} className="bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-secondary transition-colors ml-auto">{t('next')}</button>}
-            {step === 3 && <button type="submit" className="bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-secondary transition-colors ml-auto">{t('submit')}</button>}
+          <div className="mt-8 flex justify-between items-center">
+            {step > 1 ? <button type="button" onClick={prevStep} className="bg-base-300 text-content-100 py-2 px-4 rounded-md hover:bg-gray-500 transition-colors">{t('back')}</button> : <div />}
+            {step < 4 && <button type="button" onClick={nextStep} className="bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-secondary transition-colors">{t('next')}</button>}
+            {step === 4 && <button type="submit" className="bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-secondary transition-colors">{t('submit')}</button>}
           </div>
         </form>
       </div>
@@ -127,4 +189,3 @@ const ProfileForm: React.FC = () => {
 };
 
 export default ProfileForm;
-   

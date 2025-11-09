@@ -1,117 +1,79 @@
 
 {
-  "default": [
-    {
-      "day": "Monday",
-      "meals": {
-        "breakfast": { "name": "Oatmeal with Berries", "description": "A warm bowl of rolled oats topped with mixed berries and a sprinkle of chia seeds.", "macros": { "protein": 10, "carbs": 60, "fats": 8 } },
-        "midMorningSnack": { "name": "Greek Yogurt", "description": "A serving of plain Greek yogurt with a drizzle of honey.", "macros": { "protein": 15, "carbs": 10, "fats": 5 } },
-        "lunch": { "name": "Grilled Chicken Salad", "description": "Grilled chicken breast over a bed of mixed greens, tomatoes, cucumbers, and a light vinaigrette.", "macros": { "protein": 35, "carbs": 15, "fats": 10 } },
-        "afternoonSnack": { "name": "Apple with Peanut Butter", "description": "A crisp apple with two tablespoons of natural peanut butter.", "macros": { "protein": 8, "carbs": 30, "fats": 16 } },
-        "dinner": { "name": "Baked Salmon with Quinoa", "description": "Baked salmon fillet served with a side of quinoa and steamed asparagus.", "macros": { "protein": 40, "carbs": 40, "fats": 18 } }
-      },
-      "dailySummary": { "calories": 1950, "protein": 108, "carbs": 155, "fats": 57 },
-      "nutritionistTip": "Hydration is key! Aim to drink at least 8-10 glasses of water throughout the day to stay hydrated."
-    },
-    {
-      "day": "Tuesday",
-      "meals": {
-        "breakfast": { "name": "Scrambled Eggs with Toast", "description": "Three scrambled eggs with whole-wheat toast.", "macros": { "protein": 25, "carbs": 30, "fats": 15 } },
-        "midMorningSnack": { "name": "Handful of Almonds", "description": "A small handful of raw almonds for a quick energy boost.", "macros": { "protein": 6, "carbs": 6, "fats": 14 } },
-        "lunch": { "name": "Lentil Soup", "description": "A hearty bowl of lentil soup with vegetables.", "macros": { "protein": 18, "carbs": 40, "fats": 5 } },
-        "afternoonSnack": { "name": "Protein Shake", "description": "A scoop of whey or plant-based protein mixed with water or milk.", "macros": { "protein": 25, "carbs": 5, "fats": 3 } },
-        "dinner": { "name": "Beef Stir-fry", "description": "Lean beef strips stir-fried with broccoli, bell peppers, and a light soy sauce.", "macros": { "protein": 45, "carbs": 25, "fats": 15 } }
-      },
-      "dailySummary": { "calories": 2000, "protein": 119, "carbs": 106, "fats": 52 },
-      "nutritionistTip": "Incorporate a variety of colorful vegetables to ensure a wide range of vitamins and minerals."
-    },
-    {
-      "day": "Wednesday",
-      "meals": {
-        "breakfast": { "name": "Smoothie", "description": "A smoothie made with spinach, banana, protein powder, and almond milk.", "macros": { "protein": 30, "carbs": 40, "fats": 10 } },
-        "midMorningSnack": { "name": "Cottage Cheese", "description": "A cup of low-fat cottage cheese.", "macros": { "protein": 25, "carbs": 6, "fats": 5 } },
-        "lunch": { "name": "Turkey Wrap", "description": "Sliced turkey breast in a whole-wheat wrap with lettuce and tomato.", "macros": { "protein": 30, "carbs": 35, "fats": 8 } },
-        "afternoonSnack": { "name": "Orange", "description": "A fresh, juicy orange.", "macros": { "protein": 1, "carbs": 15, "fats": 0 } },
-        "dinner": { "name": "Pasta with Marinara", "description": "Whole-wheat pasta with a simple tomato-based marinara sauce and a side salad.", "macros": { "protein": 15, "carbs": 70, "fats": 8 } }
-      },
-      "dailySummary": { "calories": 1980, "protein": 101, "carbs": 166, "fats": 31 },
-      "nutritionistTip": "Listen to your body's hunger cues. Eat when you're hungry and stop when you're full."
-    },
-    {
-      "day": "Thursday",
-      "meals": {
-        "breakfast": { "name": "Oatmeal with Berries", "description": "A warm bowl of rolled oats topped with mixed berries and a sprinkle of chia seeds.", "macros": { "protein": 10, "carbs": 60, "fats": 8 } },
-        "midMorningSnack": { "name": "Greek Yogurt", "description": "A serving of plain Greek yogurt with a drizzle of honey.", "macros": { "protein": 15, "carbs": 10, "fats": 5 } },
-        "lunch": { "name": "Grilled Chicken Salad", "description": "Grilled chicken breast over a bed of mixed greens, tomatoes, cucumbers, and a light vinaigrette.", "macros": { "protein": 35, "carbs": 15, "fats": 10 } },
-        "afternoonSnack": { "name": "Apple with Peanut Butter", "description": "A crisp apple with two tablespoons of natural peanut butter.", "macros": { "protein": 8, "carbs": 30, "fats": 16 } },
-        "dinner": { "name": "Baked Salmon with Quinoa", "description": "Baked salmon fillet served with a side of quinoa and steamed asparagus.", "macros": { "protein": 40, "carbs": 40, "fats": 18 } }
-      },
-      "dailySummary": { "calories": 1950, "protein": 108, "carbs": 155, "fats": 57 },
-      "nutritionistTip": "Focus on recovery. A good night's sleep is just as important as your diet for muscle repair."
-    },
-    {
-      "day": "Friday",
-      "meals": {
-        "breakfast": { "name": "Scrambled Eggs with Toast", "description": "Three scrambled eggs with whole-wheat toast.", "macros": { "protein": 25, "carbs": 30, "fats": 15 } },
-        "midMorningSnack": { "name": "Handful of Almonds", "description": "A small handful of raw almonds for a quick energy boost.", "macros": { "protein": 6, "carbs": 6, "fats": 14 } },
-        "lunch": { "name": "Lentil Soup", "description": "A hearty bowl of lentil soup with vegetables.", "macros": { "protein": 18, "carbs": 40, "fats": 5 } },
-        "afternoonSnack": { "name": "Protein Shake", "description": "A scoop of whey or plant-based protein mixed with water or milk.", "macros": { "protein": 25, "carbs": 5, "fats": 3 } },
-        "dinner": { "name": "Beef Stir-fry", "description": "Lean beef strips stir-fried with broccoli, bell peppers, and a light soy sauce.", "macros": { "protein": 45, "carbs": 25, "fats": 15 } }
-      },
-      "dailySummary": { "calories": 2000, "protein": 119, "carbs": 106, "fats": 52 },
-      "nutritionistTip": "Plan your meals for the weekend to stay on track with your nutrition goals."
-    },
-    {
-      "day": "Saturday",
-      "meals": {
-        "breakfast": { "name": "Smoothie", "description": "A smoothie made with spinach, banana, protein powder, and almond milk.", "macros": { "protein": 30, "carbs": 40, "fats": 10 } },
-        "midMorningSnack": { "name": "Cottage Cheese", "description": "A cup of low-fat cottage cheese.", "macros": { "protein": 25, "carbs": 6, "fats": 5 } },
-        "lunch": { "name": "Turkey Wrap", "description": "Sliced turkey breast in a whole-wheat wrap with lettuce and tomato.", "macros": { "protein": 30, "carbs": 35, "fats": 8 } },
-        "afternoonSnack": { "name": "Orange", "description": "A fresh, juicy orange.", "macros": { "protein": 1, "carbs": 15, "fats": 0 } },
-        "dinner": { "name": "Pasta with Marinara", "description": "Whole-wheat pasta with a simple tomato-based marinara sauce and a side salad.", "macros": { "protein": 15, "carbs": 70, "fats": 8 } }
-      },
-      "dailySummary": { "calories": 1980, "protein": 101, "carbs": 166, "fats": 31 },
-      "nutritionistTip": "Allow for a treat meal occasionally. A balanced diet is sustainable and includes foods you enjoy."
-    },
-    {
-      "day": "Sunday",
-      "meals": {
-        "breakfast": { "name": "Oatmeal with Berries", "description": "A warm bowl of rolled oats topped with mixed berries and a sprinkle of chia seeds.", "macros": { "protein": 10, "carbs": 60, "fats": 8 } },
-        "midMorningSnack": { "name": "Greek Yogurt", "description": "A serving of plain Greek yogurt with a drizzle of honey.", "macros": { "protein": 15, "carbs": 10, "fats": 5 } },
-        "lunch": { "name": "Leftover Beef Stir-fry", "description": "Enjoying the delicious leftovers from Friday's dinner.", "macros": { "protein": 45, "carbs": 25, "fats": 15 } },
-        "afternoonSnack": { "name": "Apple with Peanut Butter", "description": "A crisp apple with two tablespoons of natural peanut butter.", "macros": { "protein": 8, "carbs": 30, "fats": 16 } },
-        "dinner": { "name": "Baked Salmon with Quinoa", "description": "Baked salmon fillet served with a side of quinoa and steamed asparagus.", "macros": { "protein": 40, "carbs": 40, "fats": 18 } }
-      },
-      "dailySummary": { "calories": 2100, "protein": 118, "carbs": 165, "fats": 62 },
-      "nutritionistTip": "Rest and recover. Sunday is a great day to prep some meals for the week ahead."
-    }
-  ],
-  "Sprints (100m, 200m, 400m)": [
-    {
-      "day": "Monday",
-      "meals": {
-        "breakfast": { "name": "Protein Oatmeal", "description": "Oats cooked with a scoop of protein powder, topped with banana slices.", "macros": { "protein": 35, "carbs": 60, "fats": 10 } },
-        "midMorningSnack": { "name": "Hard-Boiled Eggs", "description": "Two hard-boiled eggs for a protein-packed snack.", "macros": { "protein": 12, "carbs": 1, "fats": 10 } },
-        "lunch": { "name": "Chicken Breast & Sweet Potato", "description": "Grilled chicken breast with a baked sweet potato and a side of broccoli.", "macros": { "protein": 50, "carbs": 45, "fats": 9 } },
-        "afternoonSnack": { "name": "Cottage Cheese", "description": "A cup of low-fat cottage cheese with pineapple chunks.", "macros": { "protein": 25, "carbs": 10, "fats": 5 } },
-        "dinner": { "name": "Lean Beef with Brown Rice", "description": "Lean ground beef with brown rice and mixed vegetables.", "macros": { "protein": 40, "carbs": 50, "fats": 15 } }
-      },
-      "dailySummary": { "calories": 2300, "protein": 162, "carbs": 166, "fats": 49 },
-      "nutritionistTip": "Protein timing is crucial for sprinters. Consume a protein-rich snack or meal within an hour after your training session to maximize muscle repair."
-    }
-  ],
-  "Marathon & Road Races": [
-    {
-      "day": "Monday",
-      "meals": {
-        "breakfast": { "name": "Large Bowl of Oatmeal", "description": "A large bowl of oatmeal with banana, walnuts, and a drizzle of maple syrup.", "macros": { "protein": 15, "carbs": 80, "fats": 15 } },
-        "midMorningSnack": { "name": "Fruit Smoothie", "description": "A smoothie with mixed berries, Greek yogurt, and a touch of honey.", "macros": { "protein": 15, "carbs": 40, "fats": 5 } },
-        "lunch": { "name": "Pasta with Chicken", "description": "A generous portion of whole-wheat pasta with grilled chicken and tomato sauce.", "macros": { "protein": 40, "carbs": 90, "fats": 12 } },
-        "afternoonSnack": { "name": "Rice Cakes with Avocado", "description": "Two brown rice cakes topped with mashed avocado and a sprinkle of salt.", "macros": { "protein": 4, "carbs": 30, "fats": 15 } },
-        "dinner": { "name": "Salmon, Rice, and Veggies", "description": "A large fillet of salmon with a hefty side of white rice and steamed green beans.", "macros": { "protein": 40, "carbs": 70, "fats": 20 } }
-      },
-      "dailySummary": { "calories": 2800, "protein": 114, "carbs": 310, "fats": 67 },
-      "nutritionistTip": "Carbohydrates are your primary fuel source. Focus on complex carbs throughout the day to keep your glycogen stores full for long runs."
-    }
-  ]
+  "default": {
+    "None": [
+      {
+        "day": "Monday",
+        "meals": {
+          "breakfast": { "name": "Oatmeal with Berries", "description": "A warm bowl of rolled oats topped with mixed berries and a sprinkle of chia seeds.", "macros": { "protein": 10, "carbs": 60, "fats": 8 }, "ingredients": ["1/2 cup rolled oats", "1 cup water or milk", "1/2 cup mixed berries", "1 tbsp chia seeds"], "preparation": ["Bring water or milk to a boil in a small saucepan.", "Stir in oats and reduce heat to low.", "Simmer for 5-7 minutes, stirring occasionally, until oats are tender.", "Pour into a bowl and top with mixed berries and chia seeds."] },
+          "midMorningSnack": { "name": "Greek Yogurt", "description": "A serving of plain Greek yogurt with a drizzle of honey.", "macros": { "protein": 15, "carbs": 10, "fats": 5 }, "ingredients": ["1 cup plain Greek yogurt", "1 tsp honey (optional)"], "preparation": ["Spoon the Greek yogurt into a bowl.", "Drizzle with honey if desired and serve."] },
+          "lunch": { "name": "Grilled Chicken Salad", "description": "Grilled chicken breast over a bed of mixed greens, tomatoes, cucumbers, and a light vinaigrette.", "macros": { "protein": 35, "carbs": 15, "fats": 10 }, "ingredients": ["150g chicken breast", "2 cups mixed greens", "1/2 cucumber, sliced", "1/2 tomato, wedged", "2 tbsp vinaigrette dressing"], "preparation": ["Season and grill the chicken breast until cooked through, then slice.", "Combine mixed greens, cucumber, and tomato in a large bowl.", "Top with the sliced grilled chicken and drizzle with vinaigrette."] },
+          "afternoonSnack": { "name": "Apple with Peanut Butter", "description": "A crisp apple with two tablespoons of natural peanut butter.", "macros": { "protein": 8, "carbs": 30, "fats": 16 }, "ingredients": ["1 medium apple", "2 tbsp natural peanut butter"], "preparation": ["Slice the apple.", "Serve with peanut butter for dipping."] },
+          "dinner": { "name": "Baked Salmon with Quinoa", "description": "Baked salmon fillet served with a side of quinoa and steamed asparagus.", "macros": { "protein": 40, "carbs": 40, "fats": 18 }, "ingredients": ["180g salmon fillet", "1 cup cooked quinoa", "1 bunch asparagus", "1 tsp olive oil", "Lemon wedge"], "preparation": ["Preheat oven to 200°C (400°F).", "Toss asparagus with olive oil and season.", "Place salmon and asparagus on a baking sheet and bake for 12-15 minutes.", "Serve with quinoa and a squeeze of lemon over the salmon."] }
+        },
+        "dailySummary": { "calories": 1950, "protein": 108, "carbs": 155, "fats": 57 },
+        "nutritionistTip": "Hydration is key! Aim to drink at least 8-10 glasses of water throughout the day to stay hydrated."
+      }
+    ]
+  },
+  "Sprints (100m, 200m, 400m)": {
+    "None": [
+      {
+        "day": "Training Day",
+        "meals": {
+          "breakfast": { "name": "Protein Oatmeal", "description": "Oats cooked with a scoop of protein powder, topped with banana slices.", "macros": { "protein": 35, "carbs": 60, "fats": 10 }, "ingredients": ["1/2 cup rolled oats", "1 scoop vanilla or chocolate protein powder", "1 cup water or milk", "1/2 sliced banana"], "preparation": ["Cook oats with liquid as usual.", "Once cooked, stir in the protein powder until fully combined.", "Top with banana slices and serve immediately."] },
+          "midMorningSnack": { "name": "Hard-Boiled Eggs", "description": "Two hard-boiled eggs for a protein-packed snack.", "macros": { "protein": 12, "carbs": 1, "fats": 10 }, "ingredients": ["2 large eggs"], "preparation": ["Place eggs in a saucepan and cover with cold water.", "Bring to a boil, then cover and remove from heat.", "Let stand for 10-12 minutes.", "Drain and cool in ice water before peeling."] },
+          "lunch": { "name": "Chicken Breast & Sweet Potato", "description": "Grilled chicken breast with a baked sweet potato and a side of broccoli.", "macros": { "protein": 50, "carbs": 45, "fats": 9 }, "ingredients": ["200g chicken breast", "1 medium sweet potato", "1 cup broccoli florets"], "preparation": ["Bake the sweet potato at 200°C (400°F) for 45-50 minutes.", "Grill or pan-sear the chicken breast until cooked through.", "Steam the broccoli until tender-crisp.", "Serve all components together."] },
+          "afternoonSnack": { "name": "Cottage Cheese", "description": "A cup of low-fat cottage cheese with pineapple chunks.", "macros": { "protein": 25, "carbs": 10, "fats": 5 }, "ingredients": ["1 cup low-fat cottage cheese", "1/2 cup pineapple chunks (optional)"], "preparation": ["Combine cottage cheese and pineapple in a bowl."] },
+          "dinner": { "name": "Lean Beef with Brown Rice", "description": "Lean ground beef with brown rice and mixed vegetables.", "macros": { "protein": 40, "carbs": 50, "fats": 15 }, "ingredients": ["150g lean ground beef", "1 cup cooked brown rice", "1 cup mixed vegetables (e.g., peas, carrots, corn)"], "preparation": ["Cook ground beef in a skillet until browned, drain any excess fat.", "Stir in the mixed vegetables and cook until heated through.", "Serve the beef and vegetable mixture over the brown rice."] }
+        },
+        "dailySummary": { "calories": 2300, "protein": 162, "carbs": 166, "fats": 49 },
+        "nutritionistTip": "Protein timing is crucial for sprinters. Consume a protein-rich snack or meal within an hour after your training session to maximize muscle repair."
+      }
+    ],
+    "Vegetarian": [
+      {
+        "day": "Training Day",
+        "meals": {
+          "breakfast": { "name": "Protein Oatmeal", "description": "Oats cooked with a scoop of plant-based protein powder, topped with banana slices.", "macros": { "protein": 35, "carbs": 60, "fats": 10 }, "ingredients": ["1/2 cup rolled oats", "1 scoop vanilla or chocolate plant-based protein powder", "1 cup soy or almond milk", "1/2 sliced banana"], "preparation": ["Cook oats with liquid as usual.", "Once cooked, stir in the protein powder until fully combined.", "Top with banana slices and serve immediately."] },
+          "midMorningSnack": { "name": "Greek Yogurt", "description": "A serving of plain Greek yogurt for a protein-packed snack.", "macros": { "protein": 15, "carbs": 8, "fats": 5 }, "ingredients": ["1 cup plain Greek yogurt"], "preparation": ["Serve yogurt in a bowl. Can be topped with berries."] },
+          "lunch": { "name": "Tofu Scramble & Sweet Potato", "description": "Scrambled tofu with spices, a baked sweet potato, and a side of broccoli.", "macros": { "protein": 40, "carbs": 50, "fats": 12 }, "ingredients": ["200g firm tofu, crumbled", "1 tsp turmeric", "1/2 tsp cumin", "1 medium sweet potato", "1 cup broccoli florets"], "preparation": ["Bake the sweet potato at 200°C (400°F) for 45-50 minutes.", "Sauté crumbled tofu with turmeric and cumin until heated through.", "Steam the broccoli until tender-crisp.", "Serve all components together."] },
+          "afternoonSnack": { "name": "Cottage Cheese", "description": "A cup of low-fat cottage cheese with pineapple chunks.", "macros": { "protein": 25, "carbs": 10, "fats": 5 }, "ingredients": ["1 cup low-fat cottage cheese", "1/2 cup pineapple chunks (optional)"], "preparation": ["Combine cottage cheese and pineapple in a bowl."] },
+          "dinner": { "name": "Lentil Bolognese with Brown Rice", "description": "A rich lentil and vegetable bolognese sauce served over brown rice.", "macros": { "protein": 30, "carbs": 60, "fats": 10 }, "ingredients": ["1 cup brown lentils, cooked", "1 can (400g) crushed tomatoes", "1 onion, diced", "1 carrot, diced", "1 cup cooked brown rice"], "preparation": ["Sauté onion and carrot until soft.", "Add crushed tomatoes and cooked lentils. Simmer for 15 minutes.", "Serve the lentil bolognese over the brown rice."] }
+        },
+        "dailySummary": { "calories": 2250, "protein": 145, "carbs": 188, "fats": 42 },
+        "nutritionistTip": "Ensure you're getting complete proteins by combining sources like beans and rice. Plant-based protein is excellent for muscle repair."
+      }
+    ]
+  },
+  "Marathon & Road Races": {
+    "None": [
+      {
+        "day": "High-Carb Day",
+        "meals": {
+          "breakfast": { "name": "Large Bowl of Oatmeal", "description": "A large bowl of oatmeal with banana, walnuts, and a drizzle of maple syrup.", "macros": { "protein": 15, "carbs": 80, "fats": 15 }, "ingredients": ["1 cup rolled oats", "2 cups water or milk", "1 banana, sliced", "1/4 cup walnuts", "1 tbsp maple syrup"], "preparation": ["Cook oats according to package directions.", "Pour into a large bowl and top with banana, walnuts, and a drizzle of maple syrup."] },
+          "midMorningSnack": { "name": "Fruit Smoothie", "description": "A smoothie with mixed berries, Greek yogurt, and a touch of honey.", "macros": { "protein": 15, "carbs": 40, "fats": 5 }, "ingredients": ["1 cup mixed berries (frozen)", "1/2 cup Greek yogurt", "1/2 cup milk or water", "1 tsp honey (optional)"], "preparation": ["Combine all ingredients in a blender.", "Blend until smooth."] },
+          "lunch": { "name": "Pasta with Chicken", "description": "A generous portion of whole-wheat pasta with grilled chicken and tomato sauce.", "macros": { "protein": 40, "carbs": 90, "fats": 12 }, "ingredients": ["150g (dry) whole-wheat pasta", "150g grilled chicken breast, sliced", "1.5 cups tomato sauce"], "preparation": ["Cook pasta according to package directions.", "Heat tomato sauce in a saucepan.", "Combine cooked pasta, chicken, and sauce in a large bowl and toss."] },
+          "afternoonSnack": { "name": "Rice Cakes with Avocado", "description": "Two brown rice cakes topped with mashed avocado and a sprinkle of salt.", "macros": { "protein": 4, "carbs": 30, "fats": 15 }, "ingredients": ["2 brown rice cakes", "1/2 avocado", "Pinch of salt"], "preparation": ["Mash the avocado and spread it evenly over the rice cakes.", "Sprinkle with salt and serve."] },
+          "dinner": { "name": "Salmon, Rice, and Veggies", "description": "A large fillet of salmon with a hefty side of white rice and steamed green beans.", "macros": { "protein": 40, "carbs": 70, "fats": 20 }, "ingredients": ["200g salmon fillet", "1.5 cups cooked white rice", "1 cup green beans"], "preparation": ["Season and bake or pan-sear the salmon until cooked through.", "Steam the green beans until tender.", "Serve the salmon with the rice and green beans."] }
+        },
+        "dailySummary": { "calories": 2800, "protein": 114, "carbs": 310, "fats": 67 },
+        "nutritionistTip": "Carbohydrates are your primary fuel source. Focus on complex carbs throughout the day to keep your glycogen stores full for long runs."
+      }
+    ],
+    "Vegetarian": [
+       {
+        "day": "High-Carb Day",
+        "meals": {
+          "breakfast": { "name": "Large Bowl of Oatmeal", "description": "A large bowl of oatmeal with banana, walnuts, and a drizzle of maple syrup.", "macros": { "protein": 15, "carbs": 80, "fats": 15 }, "ingredients": ["1 cup rolled oats", "2 cups water or milk", "1 banana, sliced", "1/4 cup walnuts", "1 tbsp maple syrup"], "preparation": ["Cook oats according to package directions.", "Pour into a large bowl and top with banana, walnuts, and a drizzle of maple syrup."] },
+          "midMorningSnack": { "name": "Fruit Smoothie", "description": "A smoothie with mixed berries, soy yogurt, and a touch of honey.", "macros": { "protein": 12, "carbs": 40, "fats": 5 }, "ingredients": ["1 cup mixed berries (frozen)", "1/2 cup soy yogurt", "1/2 cup water", "1 tsp honey (optional)"], "preparation": ["Combine all ingredients in a blender.", "Blend until smooth."] },
+          "lunch": { "name": "Pasta with Lentil Sauce", "description": "A generous portion of whole-wheat pasta with a hearty red lentil tomato sauce.", "macros": { "protein": 30, "carbs": 100, "fats": 10 }, "ingredients": ["150g (dry) whole-wheat pasta", "1 cup red lentils", "1.5 cups tomato sauce", "1 onion, diced"], "preparation": ["Cook pasta according to package directions.", "Sauté onion, then add lentils and tomato sauce and simmer until lentils are soft.", "Combine cooked pasta and sauce in a large bowl and toss."] },
+          "afternoonSnack": { "name": "Rice Cakes with Avocado", "description": "Two brown rice cakes topped with mashed avocado and a sprinkle of salt.", "macros": { "protein": 4, "carbs": 30, "fats": 15 }, "ingredients": ["2 brown rice cakes", "1/2 avocado", "Pinch of salt"], "preparation": ["Mash the avocado and spread it evenly over the rice cakes.", "Sprinkle with salt and serve."] },
+          "dinner": { "name": "Tofu, Rice, and Veggies", "description": "A large portion of baked tofu with a hefty side of white rice and steamed green beans.", "macros": { "protein": 35, "carbs": 75, "fats": 18 }, "ingredients": ["200g firm tofu, cubed and baked", "1.5 cups cooked white rice", "1 cup green beans"], "preparation": ["Bake tofu at 200°C (400°F) for 20-25 minutes until golden.", "Steam the green beans until tender.", "Serve the tofu with the rice and green beans."] }
+        },
+        "dailySummary": { "calories": 2750, "protein": 96, "carbs": 325, "fats": 63 },
+        "nutritionistTip": "Plant-based carbohydrates are your best friend! Focus on sources like sweet potatoes, oats, and whole grains to fuel your long runs and aid recovery."
+      }
+    ]
+  }
 }

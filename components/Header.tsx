@@ -2,8 +2,7 @@
 import React from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLocalization } from '../hooks/useLocalization';
-// Fix: Import `ChartIcon` which was used in the component but not imported.
-import { UserIcon, BellIcon, ChevronDownIcon, ChartIcon } from './Icons';
+import { UserIcon, BellIcon, ChevronDownIcon, LogoIcon } from './Icons';
 
 const Header: React.FC = () => {
   const { userProfile, language, setLanguage } = useAppContext();
@@ -12,9 +11,9 @@ const Header: React.FC = () => {
   return (
     <header className="bg-base-200 shadow-md">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-           <ChartIcon className="w-8 h-8 text-brand-primary" />
-           <h1 className="text-xl md:text-2xl font-bold text-content-100 tracking-tight">{t('appName')}</h1>
+        <div className="flex items-center space-x-3">
+           <LogoIcon className="w-8 h-8 text-brand-primary" />
+           <h1 className="text-xl md:text-2xl font-bold text-content-100 tracking-tight">OptiFuel</h1>
         </div>
         <div className="flex items-center space-x-4">
           <div className="relative">

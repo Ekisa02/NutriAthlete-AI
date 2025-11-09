@@ -9,6 +9,12 @@ export enum SportType {
   MARATHON = "Marathon & Road Races",
 }
 
+export interface DietaryRestrictions {
+  diet: 'None' | 'Vegetarian' | 'Vegan' | 'Gluten-Free';
+  allergies: string[];
+  otherAllergy: string;
+}
+
 export interface UserProfile {
   name: string;
   age: number;
@@ -18,6 +24,7 @@ export interface UserProfile {
   weight: number; // in kg
   sport: SportType;
   subscription: 'Basic' | 'Premium';
+  dietaryRestrictions: DietaryRestrictions;
 }
 
 export interface Meal {
@@ -28,6 +35,8 @@ export interface Meal {
     carbs: number;
     fats: number;
   };
+  ingredients?: string[];
+  preparation?: string[];
 }
 
 export interface DailyPlan {

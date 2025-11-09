@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type, Chat, Modality, GenerateContentResponse } from "@google/genai";
 import { UserProfile, NutritionPlan, ChatMessage, EventRecommendationResponse } from "../types";
 
@@ -60,13 +61,12 @@ const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3): Promise<
     }
 };
 
-let cachedPlans: Record<string, NutritionPlan> | null = null;
+let cachedPlans: Record<string, Record<string, NutritionPlan>> | null = null;
 
-const getNutritionPlans = async (): Promise<Record<string, NutritionPlan>> => {
+const getNutritionPlans = async (): Promise<Record<string, Record<string, NutritionPlan>>> => {
     if (cachedPlans) {
         return cachedPlans;
     }
-    // Use fetch to load the JSON file from the root directory.
     const response = await fetch('/data/nutrition-plans.json');
     if (!response.ok) {
         throw new Error('Failed to fetch nutrition plans.');
@@ -79,14 +79,17 @@ const getNutritionPlans = async (): Promise<Record<string, NutritionPlan>> => {
 
 export const generateNutritionPlan = async (profile: UserProfile): Promise<NutritionPlan> => {
     const plans = await getNutritionPlans();
-    const planForSport = plans[profile.sport as keyof typeof plans];
+    const sportPlans = plans[profile.sport as keyof typeof plans] || plans.default;
+    const diet = profile.dietaryRestrictions.diet;
+    
+    // Default to 'None' if the specific diet plan doesn't exist for that sport
+    const planForDiet = sportPlans[diet as keyof typeof sportPlans] || sportPlans['None'];
 
-    // Simulate a short delay to allow loading indicator to show briefly
     return new Promise((resolve) => {
         setTimeout(() => {
-            // Fallback to default plan if a sport-specific plan doesn't exist
-            resolve(planForSport || plans.default);
-        }, 500);
+            // Fallback to a top-level default plan if sport or diet plan is missing
+            resolve(planForDiet || plans.default['None']);
+        }, 3000);
     });
 };
 
@@ -97,6 +100,7 @@ As 'NutriAthlete AI', provide pre-event and recovery nutrition recommendations f
 **Athlete Profile:**
 - Sport: ${profile.sport}
 - Weight: ${profile.weight} kg
+- Dietary Needs: ${profile.dietaryRestrictions.diet}, Allergies: ${profile.dietaryRestrictions.allergies.join(', ') || 'none'}
 - Current Location: ${location ? `${location.latitude}, ${location.longitude}`: 'Not provided'}
 
 **Event Details:**
@@ -128,31 +132,6 @@ Provide concise, actionable advice for the day before, the morning of, and immed
         text: response.text,
         groundingChunks: response.candidates?.[0]?.groundingMetadata?.groundingChunks || []
     };
-};
-
-export const getMealDetails = async (mealName: string, mealDescription: string): Promise<string> => {
-    const prompt = `
-You are a recipe assistant. Based on the following meal, provide a simple list of ingredients and preparation steps. Format the response in clean Markdown.
-
-**Meal:** ${mealName}
-**Description:** ${mealDescription}
-
-**Output format:**
-### Ingredients
-- List item 1
-- List item 2
-
-### Preparation
-1. Step 1
-2. Step 2
-`;
-    
-    const apiCall = () => ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-    });
-    const response: GenerateContentResponse = await withRetry(apiCall);
-    return response.text;
 };
 
 export const generateSpeech = async (text: string, audioContext: AudioContext): Promise<AudioBuffer> => {

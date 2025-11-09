@@ -5,20 +5,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NutriAthlete AI</title>
+    <title>OptiFuel</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              'brand-primary': '#10B981', // Emerald 500
-              'brand-secondary': '#059669', // Emerald 600
-              'base-100': '#1F2937', // Gray 800
-              'base-200': '#374151', // Gray 700
-              'base-300': '#4B5563', // Gray 600
-              'content-100': '#F9FAFB', // Gray 50
-              'content-200': '#D1D5DB', // Gray 300
+              'brand-primary': '#A3E635', // Lime 400 - Vibrant Green
+              'brand-secondary': '#84CC16', // Lime 500
+              'base-100': '#0D1117', // Almost Black
+              'base-200': '#161B22', // Dark Charcoal (Cards)
+              'base-300': '#21262D', // Lighter Charcoal (Borders, hovers)
+              'content-100': '#F0F6FC', // Off-white text
+              'content-200': '#C9D1D9', // Grayish text
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
             },
           },
         },
@@ -37,9 +41,8 @@
 }
 </script>
 </head>
-  <body class="bg-base-100 text-content-100">
+  <body class="bg-base-100 text-content-100 font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
-   
