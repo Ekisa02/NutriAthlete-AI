@@ -1,11 +1,12 @@
 
+
 import { SportType } from './types';
 
 export const SPORT_OPTIONS = Object.values(SportType);
 
 export const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
 
-export const DIET_OPTIONS = ['None', 'Vegetarian', 'Vegan', 'Gluten-Free'];
+export const DIET_OPTIONS = ['None', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Pescatarian', 'Paleo', 'Keto', 'Low-Carb'];
 
 export const ALLERGY_OPTIONS = ['Peanuts', 'Tree Nuts', 'Milk', 'Eggs', 'Soy', 'Wheat', 'Fish', 'Shellfish'];
 
@@ -81,6 +82,21 @@ export const translations = {
     otherAllergy: 'Other (please specify)',
     allergyWarningTitle: 'Allergy Alert',
     allergyWarningText: 'Your plan does not account for your specified allergies ({allergies}). Please review all meal ingredients carefully.',
+    orderDelivery: 'Order Delivery',
+    compareAndOrder: 'Compare & Order',
+    deliveryOptionsFor: 'Delivery Options for',
+    noDeliveryOptions: 'No delivery options found for this meal in your area.',
+    price: 'Price',
+    deliveryTime: 'Est. Time',
+    rating: 'Rating',
+    orderNow: 'Order Now',
+    confirmOrderTitle: 'Confirm Your Order',
+    confirmPurchase: 'Confirm Purchase',
+    orderSummary: 'You are ordering',
+    from: 'from',
+    forStr: 'for',
+    orderPlaced: 'Order Placed!',
+    orderPlacedMessage: 'Your meal is on its way. Enjoy!',
   },
   sw: {
     appName: 'OptiFuel',
@@ -153,5 +169,20 @@ export const translations = {
     otherAllergy: 'Nyingine (tafadhali bainisha)',
     allergyWarningTitle: 'Tahadhari ya Mzio',
     allergyWarningText: 'Mpango wako hauzingatii mizio uliyoainisha ({allergies}). Tafadhali kagua viungo vyote vya mlo kwa makini.',
+    orderDelivery: 'Agiza Uletewe',
+    compareAndOrder: 'Linganisha na Agiza',
+    deliveryOptionsFor: 'Chaguo za Uwasilishaji kwa',
+    noDeliveryOptions: 'Hakuna chaguo za uwasilishaji kwa mlo huu katika eneo lako.',
+    price: 'Bei',
+    deliveryTime: 'Muda',
+    rating: 'Ukadiriaji',
+    orderNow: 'Agiza Sasa',
+    confirmOrderTitle: 'Thibitisha Agizo Lako',
+    confirmPurchase: 'Thibitisha Ununuzi',
+    orderSummary: 'Unaagiza',
+    from: 'kutoka',
+    forStr: 'kwa',
+    orderPlaced: 'Agizo Limewekwa!',
+    orderPlacedMessage: 'Mlo wako unakuja. Furahia!',
   }
 };

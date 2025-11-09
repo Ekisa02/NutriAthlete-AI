@@ -1,4 +1,5 @@
 
+
 export enum SportType {
   SPRINTS = "Sprints (100m, 200m, 400m)",
   MIDDLE_DISTANCE = "Middle Distance (800m, 1500m)",
@@ -10,7 +11,7 @@ export enum SportType {
 }
 
 export interface DietaryRestrictions {
-  diet: 'None' | 'Vegetarian' | 'Vegan' | 'Gluten-Free';
+  diet: 'None' | 'Vegetarian' | 'Vegan' | 'Gluten-Free' | 'Pescatarian' | 'Paleo' | 'Keto' | 'Low-Carb';
   allergies: string[];
   otherAllergy: string;
 }
@@ -78,4 +79,20 @@ export interface GroundingChunk {
 export interface EventRecommendationResponse {
     text: string;
     groundingChunks: GroundingChunk[];
+}
+
+export interface DeliveryPartner {
+  name: string;
+  logoUrl: string; // URL to the logo image
+  area: string[]; // Areas where this partner is available, e.g., ["all", "Eldoret, Kenya"]
+}
+
+export interface MealDeliveryOption {
+  partnerName: string;
+  mealName: string; // The name of the meal as listed by the partner
+  price: number;
+  currency: string;
+  deliveryTime: string; // e.g., "25-35 min"
+  rating: number; // e.g., 4.5
+  specialOffer?: string;
 }

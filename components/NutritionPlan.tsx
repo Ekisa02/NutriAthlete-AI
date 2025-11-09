@@ -1,14 +1,23 @@
 
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-import { generateNutritionPlan, generateSpeech } from '../services/geminiService';
-import { NutritionPlan as NutritionPlanType, Meal } from '../types';
+import { generateNutritionPlan, generateSpeech, getDeliveryOptionsForMeal } from '../services/geminiService';
+import { NutritionPlan as NutritionPlanType, Meal, MealDeliveryOption } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon } from './Icons';
+import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon } from './Icons';
 import LoadingIndicator from './LoadingIndicator';
 
 declare const jspdf: any;
 declare const html2canvas: any;
+
+interface DeliveryModalState {
+    isOpen: boolean;
+    meal: Meal | null;
+    step: 'loading' | 'list' | 'confirm' | 'success';
+    options: MealDeliveryOption[];
+    selectedOption: MealDeliveryOption | null;
+}
 
 const AllergyWarning: React.FC = () => {
     const { userProfile } = useAppContext();
@@ -47,12 +56,21 @@ const NutritionPlan: React.FC = () => {
   const [activeDay, setActiveDay] = useState<number>(0);
   const reportRef = useRef<HTMLDivElement>(null);
 
-  // Modal State
+  // Meal Details Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
   const [modalContent, setModalContent] = useState('');
   const [isModalLoading, setIsModalLoading] = useState(false);
   
+  // Delivery Modal State
+  const [deliveryModalState, setDeliveryModalState] = useState<DeliveryModalState>({
+      isOpen: false,
+      meal: null,
+      step: 'loading',
+      options: [],
+      selectedOption: null,
+  });
+
   // TTS State
   const [isSpeaking, setIsSpeaking] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -157,6 +175,48 @@ const NutritionPlan: React.FC = () => {
         setIsSpeaking(false);
     }
   };
+
+  const handleOrderDeliveryClick = async (e: React.MouseEvent, meal: Meal) => {
+    e.stopPropagation();
+    if (!userProfile) return;
+    setDeliveryModalState({ isOpen: true, meal, step: 'loading', options: [], selectedOption: null });
+    
+    try {
+      const options = await getDeliveryOptionsForMeal(meal.name, userProfile.geographicalArea);
+      setDeliveryModalState(prev => ({ ...prev, options, step: 'list' }));
+    } catch (err) {
+      console.error("Failed to fetch delivery options:", err);
+      setDeliveryModalState(prev => ({ ...prev, step: 'list', options: [] })); // Show empty list on error
+    }
+  };
+  
+  const closeDeliveryModal = () => {
+      setDeliveryModalState({ isOpen: false, meal: null, step: 'loading', options: [], selectedOption: null });
+  };
+
+  const handleSelectOption = (option: MealDeliveryOption) => {
+      setDeliveryModalState(prev => ({ ...prev, selectedOption: option, step: 'confirm' }));
+  };
+
+  const handleConfirmPurchase = () => {
+      setDeliveryModalState(prev => ({ ...prev, step: 'success' }));
+      setTimeout(() => {
+          closeDeliveryModal();
+      }, 3000);
+  };
+
+  const renderStarRating = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    return (
+        <div className="flex items-center">
+            {[...Array(fullStars)].map((_, i) => <StarIcon key={`full-${i}`} className="w-4 h-4 text-yellow-400 fill-current" />)}
+            {halfStar && <StarIcon key="half" className="w-4 h-4 text-yellow-400 fill-current" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 100%, 0 100%)' }} />}
+            {[...Array(emptyStars)].map((_, i) => <StarIcon key={`empty-${i}`} className="w-4 h-4 text-gray-500" />)}
+        </div>
+    );
+  };
   
   const currentDayPlan = plan?.[activeDay];
 
@@ -221,7 +281,7 @@ const NutritionPlan: React.FC = () => {
                   { title: t('dinner'), meal: currentDayPlan.meals?.dinner },
               ].map(({title, meal}) => (
                    meal ? (
-                      <div key={title} className="bg-base-200 p-4 rounded-lg group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-base-300 cursor-pointer flex items-start gap-4" onClick={() => handleMealClick(meal)}>
+                      <div key={title} className="bg-base-200 p-4 rounded-lg group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex items-start gap-4">
                           <div className="flex-shrink-0 mt-1">
                               {mealIcons[title]}
                           </div>
@@ -234,8 +294,17 @@ const NutritionPlan: React.FC = () => {
                                       <span>C: {meal.macros?.carbs ?? 'N/A'}g</span>
                                       <span>F: {meal.macros?.fats ?? 'N/A'}g</span>
                                   </div>
-                                  <div className="text-xs text-brand-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {t('readMore')} &rarr;
+                                  <div className="flex items-center gap-2">
+                                     <button
+                                        onClick={(e) => handleOrderDeliveryClick(e, meal)}
+                                        title={t('orderDelivery')}
+                                        className="p-2 rounded-full bg-base-100 hover:bg-brand-primary/20 text-brand-primary transition-colors"
+                                    >
+                                        <ShoppingBagIcon className="w-4 h-4" />
+                                    </button>
+                                    <button onClick={() => handleMealClick(meal)} className="text-xs text-brand-primary font-semibold hover:underline">
+                                        {t('readMore')} &rarr;
+                                    </button>
                                   </div>
                               </div>
                           </div>
@@ -280,6 +349,81 @@ const NutritionPlan: React.FC = () => {
                   </div>
               </div>
           </div>
+      )}
+      {deliveryModalState.isOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={closeDeliveryModal}>
+            <div className="bg-base-200 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+                <div className="p-4 border-b border-base-300 flex justify-between items-center flex-shrink-0">
+                    <div className="flex items-center">
+                       {deliveryModalState.step === 'confirm' && (
+                           <button onClick={() => setDeliveryModalState(prev => ({...prev, step: 'list'}))} className="mr-2 text-content-200 hover:text-white"><ChevronLeftIcon className="w-6 h-6"/></button>
+                       )}
+                       <h3 className="text-lg font-bold text-brand-primary">
+                          {deliveryModalState.step === 'list' && `${t('compareAndOrder')}`}
+                          {deliveryModalState.step === 'confirm' && `${t('confirmOrderTitle')}`}
+                          {deliveryModalState.step === 'success' && `${t('orderPlaced')}`}
+                       </h3>
+                    </div>
+                    <button onClick={closeDeliveryModal} className="text-content-200 hover:text-white">
+                        <CloseIcon className="w-6 h-6"/>
+                    </button>
+                </div>
+                <div className="p-1 flex-grow overflow-y-auto">
+                    {deliveryModalState.step === 'loading' && (
+                        <div className="flex flex-col items-center justify-center h-full">
+                            <div className="w-12 h-12 border-4 border-dashed rounded-full animate-spin border-brand-primary"></div>
+                            <p className="mt-4 text-content-200">{t('gettingDetails')}...</p>
+                        </div>
+                    )}
+                    {deliveryModalState.step === 'list' && (
+                        <div className="p-4">
+                           <p className="text-sm text-content-200 mb-4">{t('deliveryOptionsFor')} <strong>{deliveryModalState.meal?.name}</strong>:</p>
+                           {deliveryModalState.options.length > 0 ? (
+                               <div className="space-y-3">
+                                   {deliveryModalState.options.map(option => (
+                                       <div key={option.partnerName + option.mealName} className="bg-base-100 p-3 rounded-lg">
+                                           <div className="flex justify-between items-center mb-2">
+                                               <h4 className="font-bold text-content-100">{option.mealName}</h4>
+                                               <span className="text-sm font-semibold text-brand-primary">{option.currency} {option.price.toFixed(2)}</span>
+                                           </div>
+                                            <p className="text-xs text-content-200 mb-3">via {option.partnerName}</p>
+                                           <div className="flex items-center justify-between text-xs text-content-200 border-t border-base-300 pt-2">
+                                               <div className="flex items-center gap-1"><ClockIcon className="w-4 h-4"/><span>{option.deliveryTime}</span></div>
+                                               <div className="flex items-center gap-1">{renderStarRating(option.rating)}<span>({option.rating})</span></div>
+                                               <button onClick={() => handleSelectOption(option)} className="bg-brand-primary text-white text-xs font-bold py-1 px-3 rounded-full hover:bg-brand-secondary transition-colors">{t('orderNow')}</button>
+                                           </div>
+                                           {option.specialOffer && <p className="text-xs text-green-400 mt-2 font-semibold">{option.specialOffer}</p>}
+                                       </div>
+                                   ))}
+                               </div>
+                           ) : (
+                               <p className="text-center text-content-200 py-12">{t('noDeliveryOptions')}</p>
+                           )}
+                        </div>
+                    )}
+                    {deliveryModalState.step === 'confirm' && deliveryModalState.selectedOption && (
+                        <div className="p-6 text-center">
+                            <h4 className="text-xl font-semibold text-content-100 mb-2">{deliveryModalState.selectedOption.mealName}</h4>
+                            <p className="text-content-200 mb-4">{t('from')} <span className="font-bold">{deliveryModalState.selectedOption.partnerName}</span></p>
+                             <div className="bg-base-100 p-4 rounded-lg mb-6">
+                                <div className="flex justify-between items-center text-lg">
+                                    <span className="text-content-200">{t('price')}</span>
+                                    <span className="font-bold text-brand-primary">{deliveryModalState.selectedOption.currency} {deliveryModalState.selectedOption.price.toFixed(2)}</span>
+                                </div>
+                             </div>
+                             <button onClick={handleConfirmPurchase} className="w-full bg-brand-primary text-white py-3 rounded-lg hover:bg-brand-secondary transition-colors font-bold">{t('confirmPurchase')}</button>
+                        </div>
+                    )}
+                    {deliveryModalState.step === 'success' && (
+                         <div className="flex flex-col items-center justify-center h-full text-center p-6">
+                            <CheckCircleIcon className="w-20 h-20 text-green-400 mb-4" />
+                            <h4 className="text-2xl font-bold text-content-100">{t('orderPlaced')}</h4>
+                            <p className="text-content-200 mt-2">{t('orderPlacedMessage')}</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
       )}
     </>
   );

@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLocalization } from '../hooks/useLocalization';
 import NutritionPlan from './NutritionPlan';
 import EventPlanner from './EventPlanner';
 import AiAssistant from './AiAssistant';
+import HydrationTracker from './HydrationTracker';
 import { ChartIcon, CalendarIcon, BotIcon } from './Icons';
 
 type Tab = 'plan' | 'events' | 'assistant';
@@ -110,9 +110,11 @@ const Dashboard: React.FC = () => {
                  <p className="font-semibold text-lg mt-2 text-content-100">Daily Energy Score</p>
             </div>
         </div>
+        
+      <HydrationTracker />
 
 
-      <div className="border-b border-base-300 mb-6">
+      <div className="border-b border-base-300 mb-6 mt-8">
         <div className="flex -mb-px">
           {tabs.map(tab => (
             <button

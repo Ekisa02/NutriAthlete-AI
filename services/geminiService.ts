@@ -1,6 +1,7 @@
 
+
 import { GoogleGenAI, Type, Chat, Modality, GenerateContentResponse } from "@google/genai";
-import { UserProfile, NutritionPlan, ChatMessage, EventRecommendationResponse } from "../types";
+import { UserProfile, NutritionPlan, ChatMessage, EventRecommendationResponse, DeliveryPartner, MealDeliveryOption } from "../types";
 
 const API_KEY = process.env.API_KEY;
 
@@ -9,6 +10,35 @@ if (!API_KEY) {
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY! });
+
+const MOCK_DELIVERY_PARTNERS: DeliveryPartner[] = [
+  { name: "Uber Eats", logoUrl: "https://d3i4yxtzktqr9n.cloudfront.net/web-eats-v2/97c43f8404e6231e.svg", area: ["all"] },
+  { name: "Glovo", logoUrl: "https://res.cloudinary.com/glovoapp/image/fetch/f_svg,q_auto/https://glovoapp.com/images/logo_green.svg", area: ["all"] },
+  { name: "KFC Delivery", logoUrl: "https://www.kfc.co.ke/static/media/kfc-logo.88334237.svg", area: ["all"] },
+  { name: "EldoFresh Meals", logoUrl: "", area: ["Eldoret, Kenya"] },
+  { name: "Nairobi Bites", logoUrl: "", area: ["Nairobi, Kenya"] }
+];
+
+const MOCK_DELIVERY_OPTIONS: MealDeliveryOption[] = [
+    // Oatmeal Options
+    { partnerName: "Uber Eats", mealName: "Classic Berry Oatmeal", price: 650, currency: "KES", deliveryTime: "25-35 min", rating: 4.6, specialOffer: "Free Delivery" },
+    { partnerName: "Glovo", mealName: "Hearty Oats with Banana", price: 600, currency: "KES", deliveryTime: "30-40 min", rating: 4.4 },
+    { partnerName: "EldoFresh Meals", mealName: "Local Honey Oatmeal", price: 550, currency: "KES", deliveryTime: "20-30 min", rating: 4.8 },
+    // Chicken Salad Options
+    { partnerName: "Uber Eats", mealName: "Grilled Chicken Caesar Salad", price: 950, currency: "KES", deliveryTime: "30-40 min", rating: 4.7 },
+    { partnerName: "Nairobi Bites", mealName: "Kuku Salad Bowl", price: 850, currency: "KES", deliveryTime: "25-35 min", rating: 4.9, specialOffer: "10% Off" },
+    { partnerName: "Glovo", mealName: "Healthy Chicken Greens", price: 900, currency: "KES", deliveryTime: "35-45 min", rating: 4.5 },
+     // Salmon Options
+    { partnerName: "Uber Eats", mealName: "Baked Salmon & Quinoa", price: 1400, currency: "KES", deliveryTime: "40-50 min", rating: 4.8 },
+    { partnerName: "Nairobi Bites", mealName: "Mchuzi wa Samaki with Rice", price: 1250, currency: "KES", deliveryTime: "30-40 min", rating: 4.7 },
+    { partnerName: "Glovo", mealName: "Salmon Fillet Dinner", price: 1450, currency: "KES", deliveryTime: "45-55 min", rating: 4.6 },
+    // Pasta Options
+    { partnerName: "Glovo", mealName: "Chicken & Tomato Pasta", price: 1100, currency: "KES", deliveryTime: "30-40 min", rating: 4.5 },
+    { partnerName: "Uber Eats", mealName: "Whole-wheat Chicken Pasta", price: 1200, currency: "KES", deliveryTime: "25-35 min", rating: 4.7, specialOffer: "Buy 1 Get 1" },
+    // Tofu Scramble Options
+    { partnerName: "Uber Eats", mealName: "Spicy Tofu Scramble", price: 800, currency: "KES", deliveryTime: "25-35 min", rating: 4.5 },
+    { partnerName: "Nairobi Bites", mealName: "Vegan Tofu Delight", price: 750, currency: "KES", deliveryTime: "30-40 min", rating: 4.8 },
+];
 
 // --- Audio Decoding Utilities for TTS ---
 function decode(base64: string) {
@@ -92,6 +122,31 @@ export const generateNutritionPlan = async (profile: UserProfile): Promise<Nutri
         }, 3000);
     });
 };
+
+export const getDeliveryOptionsForMeal = async (mealName: string, area: string): Promise<MealDeliveryOption[]> => {
+    // A small delay to simulate network request
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const lowerCaseArea = area.toLowerCase();
+    
+    const availablePartners = MOCK_DELIVERY_PARTNERS
+        .filter(partner => 
+            partner.area.includes('all') || 
+            partner.area.some(a => lowerCaseArea.includes(a.toLowerCase()))
+        )
+        .map(p => p.name);
+
+    const mealKeywords = mealName.toLowerCase().split(' ')[0]; // Use first word as keyword
+
+    const options = MOCK_DELIVERY_OPTIONS.filter(option => {
+        const partnerIsAvailable = availablePartners.includes(option.partnerName);
+        const mealIsSimilar = option.mealName.toLowerCase().includes(mealKeywords);
+        return partnerIsAvailable && mealIsSimilar;
+    });
+
+    return options;
+};
+
 
 export const getEventRecommendations = async (profile: UserProfile, eventName: string, eventDate: string, location: {latitude: number, longitude: number} | null): Promise<EventRecommendationResponse> => {
     const prompt = `
