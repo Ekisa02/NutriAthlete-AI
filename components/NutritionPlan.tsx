@@ -411,8 +411,12 @@ const NutritionPlan: React.FC = () => {
                                         <span className="text-xs font-semibold text-content-200">{t('orderVia')}</span>
                                         <div className="flex items-center gap-2">
                                             {deliveryOptionsCache[meal.name].slice(0, 3).map(opt => (
-                                                <div key={opt.partnerName} className="h-6 w-6 flex items-center justify-center bg-white rounded-full p-0.5">
-                                                    <img src={`https://d3i4yxtzktqr9n.cloudfront.net/web-eats-v2/97c43f8404e6231e.svg`} alt={opt.partnerName} className="h-full w-full object-contain" />
+                                                <div key={opt.partnerName + opt.mealName} className="h-6 w-6 flex items-center justify-center bg-white rounded-full p-0.5">
+                                                    {opt.logoUrl ? (
+                                                        <img src={opt.logoUrl} alt={opt.partnerName} className="h-full w-full object-contain" />
+                                                    ) : (
+                                                        <StoreIcon className="h-4 w-4 text-base-300" />
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

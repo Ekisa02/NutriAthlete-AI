@@ -85,6 +85,7 @@ export interface DeliveryPartner {
 
 export interface MealDeliveryOption {
   partnerName: string;
+  logoUrl: string;
   mealName: string; // The name of the meal as listed by the partner
   price: number;
   currency: string;

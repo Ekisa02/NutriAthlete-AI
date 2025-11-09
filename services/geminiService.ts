@@ -19,7 +19,7 @@ const MOCK_DELIVERY_PARTNERS: DeliveryPartner[] = [
   { name: "Nairobi Bites", logoUrl: "", area: ["Nairobi, Kenya"] }
 ];
 
-const MOCK_DELIVERY_OPTIONS: MealDeliveryOption[] = [
+const MOCK_DELIVERY_OPTIONS: Omit<MealDeliveryOption, 'logoUrl'>[] = [
     // Oatmeal Options
     { partnerName: "Uber Eats", mealName: "Classic Berry Oatmeal", price: 650, currency: "KES", deliveryTime: "25-35 min", rating: 4.6, specialOffer: "Free Delivery" },
     { partnerName: "Glovo", mealName: "Hearty Oats with Banana", price: 600, currency: "KES", deliveryTime: "30-40 min", rating: 4.4 },
@@ -129,23 +129,32 @@ export const getDeliveryOptionsForMeal = async (mealName: string, area: string):
     
     const lowerCaseArea = area.toLowerCase();
     
-    const availablePartners = MOCK_DELIVERY_PARTNERS
-        .filter(partner => 
-            partner.area.includes('all') || 
-            partner.area.some(a => lowerCaseArea.includes(a.toLowerCase()))
-        )
-        .map(p => p.name);
+    const availablePartners = MOCK_DELIVERY_PARTNERS.filter(partner => 
+        partner.area.includes('all') || 
+        partner.area.some(a => lowerCaseArea.includes(a.toLowerCase()))
+    );
+    
+    const availablePartnerNames = availablePartners.map(p => p.name);
 
     const mealKeywords = mealName.toLowerCase().split(' ')[0]; // Use first word as keyword
 
-    const options = MOCK_DELIVERY_OPTIONS.filter(option => {
-        const partnerIsAvailable = availablePartners.includes(option.partnerName);
-        const mealIsSimilar = option.mealName.toLowerCase().includes(mealKeywords);
-        return partnerIsAvailable && mealIsSimilar;
-    });
+    const options = MOCK_DELIVERY_OPTIONS
+        .filter(option => {
+            const partnerIsAvailable = availablePartnerNames.includes(option.partnerName);
+            const mealIsSimilar = option.mealName.toLowerCase().includes(mealKeywords);
+            return partnerIsAvailable && mealIsSimilar;
+        })
+        .map(option => {
+            const partner = MOCK_DELIVERY_PARTNERS.find(p => p.name === option.partnerName);
+            return {
+                ...option,
+                logoUrl: partner?.logoUrl || ''
+            };
+        });
 
     return options;
 };
+
 
 let cachedEventRecommendations: EventRecommendations | null = null;
 
