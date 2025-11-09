@@ -244,3 +244,17 @@ export const sendMessageToAssistant = async (message: string, history: ChatMessa
   const response: GenerateContentResponse = await withRetry(apiCall);
   return response.text;
 };
+
+export const initiateMpesaPayment = async (phoneNumber: string, amount: number): Promise<{ success: boolean; message: string }> => {
+  console.log(`Initiating M-PESA payment for ${phoneNumber} with amount ${amount}`);
+  // IMPORTANT: Never expose API keys or secrets on the client-side.
+  // This is a mock function to simulate the Daraja API STK Push.
+  await new Promise(resolve => setTimeout(resolve, 5000)); // Simulate network delay
+
+  // In a real sandbox, you might check for specific test numbers
+  if (phoneNumber.startsWith('254') && phoneNumber.length === 12) {
+    return { success: true, message: "STK push sent successfully." };
+  } else {
+    return { success: false, message: "Invalid phone number for sandbox." };
+  }
+};

@@ -97,6 +97,21 @@ export const translations = {
     forStr: 'for',
     orderPlaced: 'Order Placed!',
     orderPlacedMessage: 'Your meal is on its way. Enjoy!',
+    // Premium Upgrade
+    upgradeNow: 'Upgrade Now',
+    premiumBenefits: 'Unlock all features and get personalized recommendations with Premium!',
+    upgradeAmount: 'Upgrade for KES 999',
+    upgradeSuccessTitle: 'Upgrade Successful!',
+    upgradeSuccessMessage: 'Welcome to Premium! All features are now unlocked.',
+    // M-PESA Payment
+    initiatePayment: 'Pay with M-PESA',
+    safaricomNumber: 'Safaricom Phone Number',
+    safaricomNumberPlaceholder: 'e.g., 254712345678',
+    payAmount: 'Pay',
+    processingPayment: 'Processing Payment...',
+    stkPushSent: 'An STK push has been sent to your phone. Please enter your M-PESA PIN to complete the transaction.',
+    invalidPhoneNumber: 'Invalid phone number. Must start with 254 and be 12 digits.',
+    paymentFailed: 'Payment Failed',
   },
   sw: {
     appName: 'OptiFuel',
@@ -137,7 +152,7 @@ export const translations = {
     sendMessage: 'Tuma',
     language: 'Lugha',
     subscription: 'Usajili',
-    dailySummary: 'Muhtasari wa Siku',
+    dailySummary: 'Muhtari wa Siku',
     calories: 'Kalori',
     protein: 'Protini',
     carbs: 'Wanga',
@@ -184,5 +199,20 @@ export const translations = {
     forStr: 'kwa',
     orderPlaced: 'Agizo Limewekwa!',
     orderPlacedMessage: 'Mlo wako unakuja. Furahia!',
+    // Premium Upgrade
+    upgradeNow: 'Boresha Sasa',
+    premiumBenefits: 'Fungua vipengele vyote na upate mapendekezo ya kibinafsi ukiwa na Premium!',
+    upgradeAmount: 'Boresha kwa KES 999',
+    upgradeSuccessTitle: 'Uboreshaji Umefanikiwa!',
+    upgradeSuccessMessage: 'Karibu Premium! Vipengele vyote sasa vimefunguliwa.',
+    // M-PESA Payment
+    initiatePayment: 'Lipa na M-PESA',
+    safaricomNumber: 'Nambari ya Simu ya Safaricom',
+    safaricomNumberPlaceholder: 'k.m., 254712345678',
+    payAmount: 'Lipa',
+    processingPayment: 'Inachakata malipo...',
+    stkPushSent: 'Ujumbe wa STK umetumwa kwa simu yako. Tafadhali weka nambari yako ya siri ya M-PESA kukamilisha malipo.',
+    invalidPhoneNumber: 'Nambari ya simu si sahihi. Lazima ianze na 254 na iwe na tarakimu 12.',
+    paymentFailed: 'Malipo Yameshindwa',
   }
 };

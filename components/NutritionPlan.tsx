@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-import { generateNutritionPlan, generateSpeech, getDeliveryOptionsForMeal } from '../services/geminiService';
+import { generateNutritionPlan, generateSpeech, getDeliveryOptionsForMeal, initiateMpesaPayment } from '../services/geminiService';
 import { NutritionPlan as NutritionPlanType, Meal, MealDeliveryOption } from '../types';
 import { useLocalization } from '../hooks/useLocalization';
-import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon, FileTextIcon } from './Icons';
+import { DownloadIcon, VolumeUpIcon, CloseIcon, SunIcon, CoffeeIcon, FlameIcon, MoonIcon, ShoppingBagIcon, StoreIcon, ClockIcon, StarIcon, ChevronLeftIcon, CheckCircleIcon, FileTextIcon, PhoneIcon } from './Icons';
 import LoadingIndicator from './LoadingIndicator';
 
 declare const jspdf: any;
@@ -14,9 +14,11 @@ declare const html2canvas: any;
 interface DeliveryModalState {
     isOpen: boolean;
     meal: Meal | null;
-    step: 'loading' | 'list' | 'confirm' | 'success';
+    step: 'loading' | 'list' | 'confirm' | 'payment' | 'processingPayment' | 'success';
     options: MealDeliveryOption[];
     selectedOption: MealDeliveryOption | null;
+    phoneNumber: string;
+    paymentError: string | null;
 }
 
 const AllergyWarning: React.FC = () => {
@@ -69,6 +71,8 @@ const NutritionPlan: React.FC = () => {
       step: 'loading',
       options: [],
       selectedOption: null,
+      phoneNumber: '',
+      paymentError: null,
   });
 
   // TTS State
@@ -179,7 +183,7 @@ const NutritionPlan: React.FC = () => {
   const handleOrderDeliveryClick = async (e: React.MouseEvent, meal: Meal) => {
     e.stopPropagation();
     if (!userProfile) return;
-    setDeliveryModalState({ isOpen: true, meal, step: 'loading', options: [], selectedOption: null });
+    setDeliveryModalState({ isOpen: true, meal, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null });
     
     try {
       const options = await getDeliveryOptionsForMeal(meal.name, userProfile.geographicalArea);
@@ -191,19 +195,46 @@ const NutritionPlan: React.FC = () => {
   };
   
   const closeDeliveryModal = () => {
-      setDeliveryModalState({ isOpen: false, meal: null, step: 'loading', options: [], selectedOption: null });
+      setDeliveryModalState({ isOpen: false, meal: null, step: 'loading', options: [], selectedOption: null, phoneNumber: '', paymentError: null });
   };
 
   const handleSelectOption = (option: MealDeliveryOption) => {
       setDeliveryModalState(prev => ({ ...prev, selectedOption: option, step: 'confirm' }));
   };
 
-  const handleConfirmPurchase = () => {
-      setDeliveryModalState(prev => ({ ...prev, step: 'success' }));
-      setTimeout(() => {
-          closeDeliveryModal();
-      }, 3000);
+  const handleProceedToPayment = () => {
+      setDeliveryModalState(prev => ({ ...prev, step: 'payment' }));
   };
+  
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { phoneNumber, selectedOption } = deliveryModalState;
+    if (!selectedOption) return;
+
+    // Basic validation
+    if (!/^254\d{9}$/.test(phoneNumber)) {
+        setDeliveryModalState(prev => ({ ...prev, paymentError: t('invalidPhoneNumber')}));
+        return;
+    }
+
+    setDeliveryModalState(prev => ({ ...prev, step: 'processingPayment', paymentError: null }));
+
+    try {
+        const result = await initiateMpesaPayment(phoneNumber, selectedOption.price);
+        if (result.success) {
+            setDeliveryModalState(prev => ({ ...prev, step: 'success' }));
+            setTimeout(() => {
+                closeDeliveryModal();
+            }, 3000);
+        } else {
+            setDeliveryModalState(prev => ({ ...prev, step: 'payment', paymentError: t('paymentFailed') }));
+        }
+    } catch (error) {
+        console.error("Payment failed:", error);
+        setDeliveryModalState(prev => ({ ...prev, step: 'payment', paymentError: t('paymentFailed') }));
+    }
+  };
+
 
   const renderStarRating = (rating: number) => {
     const fullStars = Math.floor(rating);
@@ -358,12 +389,14 @@ const NutritionPlan: React.FC = () => {
             <div className="bg-base-200 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="p-4 border-b border-base-300 flex justify-between items-center flex-shrink-0">
                     <div className="flex items-center">
-                       {deliveryModalState.step === 'confirm' && (
-                           <button onClick={() => setDeliveryModalState(prev => ({...prev, step: 'list'}))} className="mr-2 text-content-200 hover:text-white"><ChevronLeftIcon className="w-6 h-6"/></button>
+                       {(deliveryModalState.step === 'confirm' || deliveryModalState.step === 'payment') && (
+                           <button onClick={() => setDeliveryModalState(prev => ({...prev, step: 'list', paymentError: null}))} className="mr-2 text-content-200 hover:text-white"><ChevronLeftIcon className="w-6 h-6"/></button>
                        )}
                        <h3 className="text-lg font-bold text-brand-primary">
                           {deliveryModalState.step === 'list' && `${t('compareAndOrder')}`}
                           {deliveryModalState.step === 'confirm' && `${t('confirmOrderTitle')}`}
+                          {deliveryModalState.step === 'payment' && `${t('initiatePayment')}`}
+                          {deliveryModalState.step === 'processingPayment' && `${t('processingPayment')}`}
                           {deliveryModalState.step === 'success' && `${t('orderPlaced')}`}
                        </h3>
                     </div>
@@ -414,7 +447,34 @@ const NutritionPlan: React.FC = () => {
                                     <span className="font-bold text-brand-primary">{deliveryModalState.selectedOption.currency} {deliveryModalState.selectedOption.price.toFixed(2)}</span>
                                 </div>
                              </div>
-                             <button onClick={handleConfirmPurchase} className="w-full bg-brand-primary text-white py-3 rounded-lg hover:bg-brand-secondary transition-colors font-bold">{t('confirmPurchase')}</button>
+                             <button onClick={handleProceedToPayment} className="w-full bg-brand-primary text-white py-3 rounded-lg hover:bg-brand-secondary transition-colors font-bold">{t('confirmPurchase')}</button>
+                        </div>
+                    )}
+                     {deliveryModalState.step === 'payment' && deliveryModalState.selectedOption && (
+                        <form className="p-6" onSubmit={handlePaymentSubmit}>
+                            <label htmlFor="phone" className="block text-sm font-medium text-content-200 mb-1">{t('safaricomNumber')}</label>
+                             <div className="relative">
+                                <PhoneIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-content-200" />
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    value={deliveryModalState.phoneNumber}
+                                    onChange={(e) => setDeliveryModalState(prev => ({ ...prev, phoneNumber: e.target.value, paymentError: null }))}
+                                    placeholder={t('safaricomNumberPlaceholder')}
+                                    className="w-full bg-base-100 border border-base-300 rounded-md shadow-sm py-2 pl-10 pr-3 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm"
+                                />
+                            </div>
+                            {deliveryModalState.paymentError && <p className="text-red-400 text-xs mt-2">{deliveryModalState.paymentError}</p>}
+                            <button type="submit" className="mt-4 w-full bg-brand-primary text-white py-3 rounded-lg hover:bg-brand-secondary transition-colors font-bold">
+                                {t('payAmount')} {deliveryModalState.selectedOption.currency} {deliveryModalState.selectedOption.price.toFixed(2)}
+                            </button>
+                        </form>
+                    )}
+                    {deliveryModalState.step === 'processingPayment' && (
+                        <div className="flex flex-col items-center justify-center h-full text-center p-6">
+                            <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-brand-primary mb-4"></div>
+                            <h4 className="text-xl font-bold text-content-100">{t('processingPayment')}</h4>
+                            <p className="text-content-200 mt-2 max-w-xs">{t('stkPushSent')}</p>
                         </div>
                     )}
                     {deliveryModalState.step === 'success' && (
