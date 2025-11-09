@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLocalization } from '../hooks/useLocalization';
@@ -84,9 +85,20 @@ const CircularProgress: React.FC<{ score: number }> = ({ score }) => {
 
 
 const Dashboard: React.FC = () => {
-  const { userProfile } = useAppContext();
+  const { userProfile, addNotification, notifications } = useAppContext();
   const { t } = useLocalization();
   const [activeTab, setActiveTab] = useState<Tab>('plan');
+
+  useEffect(() => {
+      // Add welcome notifications only if there are none.
+      if (notifications.length === 0 && userProfile) {
+          addNotification(`Welcome to OptiFuel, ${userProfile.name}! Your journey to peak performance starts now.`);
+          setTimeout(() => {
+              addNotification("Your personalized nutrition plan is ready. Check it out!");
+          }, 2000); // delay second notification
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile]); // Run only when userProfile is available
 
   const tabs = [
     { id: 'plan', label: t('nutritionPlan'), icon: <ChartIcon className="w-5 h-5 mr-2" /> },

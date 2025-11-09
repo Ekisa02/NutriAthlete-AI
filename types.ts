@@ -92,3 +92,10 @@ export interface MealDeliveryOption {
   rating: number; // e.g., 4.5
   specialOffer?: string;
 }
+
+export interface Notification {
+  id: string;
+  message: string;
+  timestamp: Date;
+  read: boolean;
+}
